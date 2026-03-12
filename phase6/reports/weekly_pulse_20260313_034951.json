@@ -1,0 +1,65 @@
+{
+  "status": "complete",
+  "report": {
+    "date_range": [
+      "2026-01-05",
+      "2026-03-10"
+    ],
+    "themes": [
+      {
+        "rank": 1,
+        "label": "Trading Issues",
+        "description": "Reviews mentioning problems with trading, such as glitches, delayed executions, and incorrect pricing. These issues often result in financial losses for the users.",
+        "frequency": 43
+      },
+      {
+        "rank": 2,
+        "label": "App Performance",
+        "description": "Reviews discussing the app's performance, including lag, crashes, and unresponsiveness. These issues hinder the user experience and can lead to frustration.",
+        "frequency": 43
+      },
+      {
+        "rank": 3,
+        "label": "Feature Requests",
+        "description": "Reviews suggesting new features or improvements to existing ones, such as adding more technical indicators, custom portfolio splits, or trailing stop-loss.",
+        "frequency": 43
+      }
+    ],
+    "quotes": [
+      "Yesterday, I installed the Groww app and began intraday trading. After buying stocks, I tried to exit my positions but faced an issue with the app. I called customer support and waited about 10 minutes. After a 43 Minute call, she was told that I needed to use a laptop to exit. I realised I would have been in...",
+      "I had a very pathetic experience with Groww. Their stop-loss and target features did not work properly. I would strongly advise others not to trade with Groww based on my experience. If you are in profit and have set a...",
+      "One of the worst broker. I palced an order today but my app got a glitch where i was not able to see my open order. I had to keep a safe exit because today was expiry and i got panicked because it was a 3 pm trade. I had to book my loss of 40 points because of this glitch and did not want to lose..."
+    ],
+    "action_ideas": [
+      "Fix trading glitches",
+      "Optimize app performance",
+      "Add technical indicators"
+    ],
+    "word_count": 246,
+    "review_count": 43,
+    "generation_timestamp": "2026-03-13T03:49:51.059522"
+  },
+  "email_draft": "To: manshuc12@gmail.com\nSubject: Play Store Pulse Report - Week of Jan 05 to Mar 10, 2026\n\nHi Team,\n\nHere's your weekly pulse report based on 43 Google Play Store reviews from January 05 to March 10, 2026.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📊 TOP THEMES\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n1. Trading Issues (43 reviews)\n   Reviews mentioning problems with trading, such as glitches, delayed executions, and incorrect pricing. These issues often result in financial losses for the users.\n\n2. App Performance (43 reviews)\n   Reviews discussing the app's performance, including lag, crashes, and unresponsiveness. These issues hinder the user experience and can lead to frustration.\n\n3. Feature Requests (43 reviews)\n   Reviews suggesting new features or improvements to existing ones, such as adding more technical indicators, custom portfolio splits, or trailing stop-loss.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💬 USER VOICES\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n1. \"Yesterday, I installed the Groww app and began intraday trading. After buying stocks, I tried to exit my positions but faced an issue with the app. I called customer support and waited about 10 minutes. After a 43 Minute call, she was told that I needed to use a laptop to exit. I realised I would have been in...\"\n\n2. \"I had a very pathetic experience with Groww. Their stop-loss and target features did not work properly. I would strongly advise others not to trade with Groww based on my experience. If you are in profit and have set a...\"\n\n3. \"One of the worst broker. I palced an order today but my app got a glitch where i was not able to see my open order. I had to keep a safe exit because today was expiry and i got panicked because it was a 3 pm trade. I had to book my loss of 40 points because of this glitch and did not want to lose...\"\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n💡 ACTION IDEAS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n1. Fix trading glitches\n\n2. Optimize app performance\n\n3. Add technical indicators\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nBest regards,\nGroww Product Team\n\nReport generated: 2026-03-13 03:49:51\nWord count: 246",
+  "metadata": {
+    "scraping": {
+      "total_reviews": 5000,
+      "valid_reviews": 43,
+      "date_range": [
+        "2026-01-05",
+        "2026-03-10"
+      ]
+    },
+    "analysis": {
+      "model_version": "llama-3.3-70b-versatile",
+      "total_themes": 5
+    },
+    "generation": {
+      "word_count": 246,
+      "model_version": "llama-3.3-70b-versatile"
+    },
+    "draft": {
+      "recipient": "manshuc12@gmail.com",
+      "output_path": "C:\\Users\\mansh\\App_Review_Insights_Analyser.git\\App_Review_Insights_Analyser\\phase5\\drafts\\email_draft_20260313_034951.txt"
+    }
+  }
+}

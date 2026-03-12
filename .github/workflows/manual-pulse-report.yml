@@ -1,0 +1,114 @@
+name: Manual Pulse Report Generation
+
+on:
+  workflow_dispatch:
+    inputs:
+      weeks_back:
+        description: 'Number of weeks to analyze (8-12)'
+        required: true
+        default: '10'
+        type: choice
+        options:
+          - '8'
+          - '9'
+          - '10'
+          - '11'
+          - '12'
+      recipient_email:
+        description: 'Recipient email address'
+        required: true
+        default: 'manshuc12@gmail.com'
+      commit_results:
+        description: 'Commit results to repository'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Create output directories
+        run: |
+          mkdir -p phase6/reports
+          mkdir -p phase6/logs
+      
+      - name: Display configuration
+        run: |
+          echo "Configuration:"
+          echo "  Weeks back: ${{ github.event.inputs.weeks_back }}"
+          echo "  Recipient: ${{ github.event.inputs.recipient_email }}"
+          echo "  Commit results: ${{ github.event.inputs.commit_results }}"
+      
+      - name: Run pulse report generation
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          RECIPIENT_EMAIL: ${{ github.event.inputs.recipient_email }}
+          WEEKS_BACK: ${{ github.event.inputs.weeks_back }}
+        run: |
+          echo "Starting pulse report generation..."
+          python phase6/scheduler.py --test --email "$RECIPIENT_EMAIL" --weeks "$WEEKS_BACK"
+          echo "Report generation completed!"
+      
+      - name: List generated files
+        run: |
+          echo "Generated reports:"
+          ls -lh phase6/reports/ || echo "No reports directory"
+          echo ""
+          echo "Log files:"
+          ls -lh phase6/logs/ || echo "No logs directory"
+      
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulse-report-${{ github.run_number }}-${{ github.event.inputs.weeks_back }}weeks
+          path: |
+            phase6/reports/*.json
+            phase6/reports/*.txt
+            phase6/logs/*.log
+          retention-days: 90
+      
+      - name: Commit and push reports
+        if: ${{ github.event.inputs.commit_results == 'true' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add phase6/reports/*.json phase6/reports/*.txt phase6/logs/*.log || true
+          git commit -m "Add manual pulse report - ${{ github.event.inputs.weeks_back }} weeks - $(date +'%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
+          git push || echo "Nothing to push"
+        continue-on-error: true
+      
+      - name: Create summary
+        if: always()
+        run: |
+          echo "## Pulse Report Generation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Weeks analyzed**: ${{ github.event.inputs.weeks_back }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Recipient**: ${{ github.event.inputs.recipient_email }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Run number**: ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Generated Files" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          ls -lh phase6/reports/ 2>/dev/null || echo "No reports generated"
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "::error::Manual pulse report generation failed. Check the logs for details."

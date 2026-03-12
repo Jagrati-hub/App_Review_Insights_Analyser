@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Configure Analysis - Play Store Review Analyzer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Configure Analysis</h2>
+    <p>Generate a weekly pulse report from Google Play Store reviews for the Groww app.</p>
+    
+    <form method="POST" action="{{ url_for('analyze') }}" class="analysis-form">
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            <label for="weeks_back">{{ form.weeks_back.label }}</label>
+            {{ form.weeks_back(class="form-control") }}
+            <small class="form-text">{{ form.weeks_back.description }}</small>
+            {% if form.weeks_back.errors %}
+                <div class="error">
+                    {% for error in form.weeks_back.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="recipient_email">{{ form.recipient_email.label }}</label>
+            {{ form.recipient_email(class="form-control") }}
+            <small class="form-text">{{ form.recipient_email.description }}</small>
+            {% if form.recipient_email.errors %}
+                <div class="error">
+                    {% for error in form.recipient_email.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+</div>
+
+<div class="info-card">
+    <h3>What This Tool Does</h3>
+    <ol>
+        <li><strong>Scrapes Reviews:</strong> Fetches up to 5,000 reviews from Google Play Store</li>
+        <li><strong>Filters & Cleans:</strong> Removes non-English reviews, emojis, and PII</li>
+        <li><strong>Analyzes Themes:</strong> Uses Groq LLM to identify top themes</li>
+        <li><strong>Generates Report:</strong> Creates a concise pulse report (≤250 words)</li>
+        <li><strong>Drafts Email:</strong> Formats the report as a professional email</li>
+    </ol>
+    
+    <h3>Report Includes</h3>
+    <ul>
+        <li>📊 Top 3 themes with review counts</li>
+        <li>💬 3 representative user quotes</li>
+        <li>💡 3 actionable ideas for the product team</li>
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+To: team@example.com
+Subject: Play Store Pulse Report - Week of Feb 19 to Mar 12, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 1042 Google Play Store reviews from February 19 to March 12, 2026.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. High Brokerage Charges (783 reviews)
+   Users are unhappy with the high brokerage charges, feeling it eats into their profits and is not competitive with other platforms.
+
+2. Technical Issues (767 reviews)
+   Users are experiencing technical issues such as slow loading, freezing, and errors while using the app, which is affecting their trading experience.
+
+3. Ease of Use (717 reviews)
+   Users find the app easy to use, navigate, and understand, making it a positive experience for beginners and experienced traders alike.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "good but brokrage chage high"
+
+2. "I am searching some app it's giving me something else. why u r promoting that which I don't want."
+
+3. "Super app with zero AMC charges. But I have only one suggestion, please provide an option to buy stocks on the basis of amount. It only shows quantity, converting into amount takes time and makes some..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION IDEAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Reduce brokerage charges
+
+2. Optimize app for faster loading
+
+3. Implement error tracking
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 01:44:38
+Word count: 143

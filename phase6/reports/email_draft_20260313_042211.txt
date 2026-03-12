@@ -1,0 +1,47 @@
+To: manshuc12@gmail.com
+Subject: Play Store Pulse Report - Week of Jan 05 to Mar 10, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 43 Google Play Store reviews from January 05 to March 10, 2026.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Trading Issues (43 reviews)
+   Reviews that mention problems with trading, such as glitches, delayed orders, and incorrect executions. These issues often result in financial losses for the users.
+
+2. App Performance (43 reviews)
+   Reviews that discuss the app's performance, including lag, crashes, and unresponsiveness. These issues can hinder the user experience and make it difficult to use the app.
+
+3. Feature Requests (43 reviews)
+   Reviews that suggest new features or improvements to existing ones, such as adding more technical indicators, improving the user interface, or enhancing the overall user experience.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "Yesterday, I installed the Groww app and began intraday trading. After buying stocks, I tried to exit my positions but faced an issue with the app. I called customer support and waited about 10 minutes. After a 43 Minute call, she was told that I needed to use a laptop to exit. I realised I..."
+
+2. "I had a very pathetic experience with Groww. Their stop-loss and target features did not work properly. I would strongly advise others not to trade with Groww based on my experience. If you are in profit..."
+
+3. "One of the worst broker. I palced an order today but my app got a glitch where i was not able to see my open order. I had to keep a safe exit because today was expiry and i got panicked because it was a 3 pm trade. I had to book my loss of 40 points because of this glitch and did..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION IDEAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix trading glitches
+
+2. Optimize app performance
+
+3. Add technical indicators
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 04:22:08
+Word count: 245

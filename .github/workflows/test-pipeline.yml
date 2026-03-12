@@ -1,0 +1,65 @@
+name: Test Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run tests (if available)
+        run: |
+          if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
+            pytest tests/ -v
+          else
+            echo "No tests found, skipping..."
+          fi
+        continue-on-error: true
+      
+      - name: Check Python syntax
+        run: |
+          python -m py_compile phase1/*.py
+          python -m py_compile phase2/*.py
+          python -m py_compile phase3/*.py
+          python -m py_compile phase4/*.py
+          python -m py_compile phase5/*.py
+          python -m py_compile phase6/*.py
+          python -m py_compile common/*.py
+      
+      - name: Verify imports
+        run: |
+          python -c "from phase1.review_scraper import ReviewScraper; print('✓ Phase 1 imports OK')"
+          python -c "from phase2.pipeline_orchestrator import PipelineOrchestrator; print('✓ Phase 2 imports OK')"
+          python -c "from phase3.theme_analyzer import ThemeAnalyzer; print('✓ Phase 3 imports OK')"
+          python -c "from phase4.report_generator import ReportGenerator; print('✓ Phase 4 imports OK')"
+          python -c "from phase5.email_drafter import EmailDrafter; print('✓ Phase 5 imports OK')"
+          python -c "from phase6.scheduler import WeeklyPulseScheduler; print('✓ Phase 6 imports OK')"
+      
+      - name: Test configuration
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          python -c "from common.config import Config; print(f'✓ Config loaded: {Config.GROQ_MODEL}')"

@@ -1,0 +1,47 @@
+To: manshuc12@gmail.com
+Subject: Play Store Pulse Report - Week of Jan 05 to Mar 10, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 43 Google Play Store reviews from January 05 to March 10, 2026.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. App Glitches (43 reviews)
+   Reviews mentioning technical issues, glitches, or unresponsiveness within the app, leading to losses or inconvenience
+
+2. Feature Requests (43 reviews)
+   Reviews suggesting new features or improvements to existing ones, such as adding more technical indicators or timeframes
+
+3. Customer Support (43 reviews)
+   Reviews expressing dissatisfaction with the customer support, including unresponsive or unhelpful representatives
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "Yesterday, I installed the Groww app and began intraday trading. After buying stocks, I tried to exit my positions but faced an issue with the app. I called customer support and waited about 10 minutes. After a 43 Minute call, she was told that I needed to use a laptop to exit. I realised I would have been in a tough spot if I hadn’t had a laptop available. I also worry about what might have happened if I had invested..."
+
+2. "I had a very pathetic experience with Groww. Their stop-loss and target features did not work properly. I would strongly advise others not to trade with Groww based on my experience. If you are in profit and have set a 30-point target, even after the market touches that price (or comes very close, around 10 points away), the system exits the trade..."
+
+3. "Good features. Please add short-term timeframes like 5m, 15m, 30m, 1hr, and 4hr, and long-term timeframes like 1 week and 1 month in technical analysis. Also add open interest (OI), pivot levels, and Fibonacci levels for both indices and options. In fundamentals, more..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION IDEAS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix app crashes
+
+2. Add new indicators
+
+3. Improve support response
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 03:54:18
+Word count: 245

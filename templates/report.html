@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Pulse Report - Play Store Review Analyzer{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📊 Weekly Pulse Report</h2>
+    <p class="report-meta">
+        <strong>Date Range:</strong> {{ report.date_range[0] }} to {{ report.date_range[1] }}<br>
+        <strong>Reviews Analyzed:</strong> {{ report.review_count }}<br>
+        <strong>Word Count:</strong> {{ report.word_count }} / 250<br>
+        <strong>Generated:</strong> {{ report.generation_timestamp }}
+    </p>
+</div>
+
+<div class="card">
+    <h3>📊 Top Themes</h3>
+    {% for theme in report.themes %}
+    <div class="theme-item">
+        <h4>{{ theme.rank }}. {{ theme.label }} <span class="badge">{{ theme.frequency }} reviews</span></h4>
+        <p>{{ theme.description }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <h3>💬 User Voices</h3>
+    {% for quote in report.quotes %}
+    <div class="quote-item">
+        <p>"{{ quote }}"</p>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="card">
+    <h3>💡 Action Ideas</h3>
+    <ol class="action-list">
+        {% for idea in report.action_ideas %}
+        <li>{{ idea }}</li>
+        {% endfor %}
+    </ol>
+</div>
+
+<div class="card">
+    <h3>📧 Email Draft Preview</h3>
+    <div class="email-preview">
+        <pre>{{ email_draft }}</pre>
+    </div>
+    <p class="email-info">
+        <strong>Recipient:</strong> {{ metadata.draft.recipient }}<br>
+        <strong>Saved to:</strong> {{ metadata.draft.output_path }}
+    </p>
+</div>
+
+<div class="actions">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Generate Another Report</a>
+</div>
+{% endblock %}

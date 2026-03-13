@@ -4,6 +4,40 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Try to import Streamlit for secrets support
+try:
+    import streamlit as st
+    HAS_STREAMLIT = True
+except ImportError:
+    HAS_STREAMLIT = False
+
+def get_config_value(key: str, default: str = '', streamlit_path: list = None):
+    """Get configuration value from Streamlit secrets, env vars, or default.
+    
+    Priority:
+    1. Streamlit secrets (if available)
+    2. Environment variables
+    3. Default value
+    """
+    # Try Streamlit secrets first
+    if HAS_STREAMLIT and streamlit_path:
+        try:
+            value = st.secrets
+            for path_part in streamlit_path:
+                value = value.get(path_part, {})
+            if value and value != {}:
+                return value
+        except (AttributeError, FileNotFoundError):
+            pass
+    
+    # Fall back to environment variable
+    env_value = os.getenv(key)
+    if env_value:
+        return env_value
+    
+    # Use default
+    return default
+
 class Config:
     """Application configuration."""
     
@@ -12,7 +46,7 @@ class Config:
     FLASK_ENV = os.getenv('FLASK_ENV', 'development')
     
     # Groq API settings
-    GROQ_API_KEY = os.getenv('GROQ_API_KEY', '')
+    GROQ_API_KEY = get_config_value('GROQ_API_KEY', '', ['groq', 'api_key'])
     GROQ_MODEL = 'llama-3.3-70b-versatile'  # Updated to newer model
     GROQ_TIMEOUT = 45  # Increased from 30 to 45 for better reliability
     GROQ_MAX_RETRIES = 2  # Reduced from 3 to 2 retries
@@ -37,9 +71,9 @@ class Config:
     ACTION_COUNT = 3
     
     # SMTP Email settings
-    SMTP_SERVER = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-    SMTP_PORT = int(os.getenv('SMTP_PORT', 587))  # 587 for TLS, 465 for SSL
-    SMTP_USERNAME = os.getenv('SMTP_USERNAME', '')  # Gmail address
-    SMTP_PASSWORD = os.getenv('SMTP_PASSWORD', '')  # Gmail app password
-    SENDER_EMAIL = os.getenv('SENDER_EMAIL', os.getenv('SMTP_USERNAME', ''))
-    SENDER_NAME = os.getenv('SENDER_NAME', 'Groww Product Team')
+    SMTP_SERVER = get_config_value('SMTP_SERVER', 'smtp.gmail.com', ['email', 'smtp_server'])
+    SMTP_PORT = int(get_config_value('SMTP_PORT', '587', ['email', 'smtp_port']))
+    SMTP_USERNAME = get_config_value('SMTP_USERNAME', '', ['email', 'smtp_username'])
+    SMTP_PASSWORD = get_config_value('SMTP_PASSWORD', '', ['email', 'smtp_password'])
+    SENDER_EMAIL = get_config_value('SENDER_EMAIL', get_config_value('SMTP_USERNAME', '', ['email', 'smtp_username']), ['email', 'sender_email'])
+    SENDER_NAME = get_config_value('SENDER_NAME', 'Groww Product Team', ['email', 'sender_name'])

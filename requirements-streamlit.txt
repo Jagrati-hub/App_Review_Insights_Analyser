@@ -1,0 +1,22 @@
+# Streamlit Deployment Requirements
+# Core dependencies for Play Store Review Analyzer
+
+# Streamlit
+streamlit==1.31.0
+
+# Web scraping
+google-play-scraper==1.2.7
+requests==2.31.0
+
+# LLM Integration
+groq==0.4.2
+
+# Data processing
+langdetect==1.0.9
+python-dateutil==2.8.2
+
+# Email
+email-validator==2.1.0
+
+# Utilities
+python-dotenv==1.0.0

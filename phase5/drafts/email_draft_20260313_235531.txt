@@ -1,0 +1,48 @@
+To: manshuc12@gmail.com
+Subject: Play Store Pulse Report - Week of Mar 05 to Mar 12, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 438 Google Play Store reviews (Avg Rating: 3.21⭐) from March 05 to March 12, 2026.
+Positive Reviews (4-5★): 211 | Negative Reviews (1-3★): 190
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. User Experience (381 reviews • ⭐⭐⭐ 3.2)
+   Reviews discussing the overall user experience, including ease of use, interface, and navigation, as well as suggestions for improvement.
+
+2. Technical Issues (358 reviews • ⭐⭐⭐ 3.1)
+   Reviews mentioning technical problems, glitches, or difficulties with the app's functionality, such as delayed order execution, chart issues, or app crashes.
+
+3. Features and Requests (358 reviews • ⭐⭐⭐ 3.1)
+   Reviews requesting new features, improvements to existing features, or suggestions for additional functionality, such as more time frames, indicators, or analysis tools.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "very low my amount in last 1 year , mid cap investment"
+
+2. "very bad from last 2 to 3 month mal function the software. and groww team is not accepting the things"
+
+3. "External fund Import has not been working since last 2 weeks but Groww did not help to resolve it. Timely updation of units of new purchase is very poor, since they stop Import fund from MF CENTRAL."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION ROADMAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Simplify Navigation → Streamline Menu → Reduce Options → Increase User Engagement
+
+2. Fix Technical Issues → Identify Crash Causes → Implement Fixes → Reduce Crashes by 40%
+
+3. Enhance Features → Add New Indicators → Improve Charting Tools → Increase User Retention
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 23:55:31
+Word count: 179

@@ -1,0 +1,48 @@
+To: manshuc12@gmail.com
+Subject: Play Store Pulse Report - Week of Jan 05 to Mar 10, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 43 Google Play Store reviews (Avg Rating: 2.58⭐) from January 05 to March 10, 2026.
+Positive Reviews (4-5★): 17 | Negative Reviews (1-3★): 26
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. App Glitches (43 reviews • ⭐⭐⭐ 2.6)
+   Reviews mentioning technical issues, glitches, or unresponsive app behavior, leading to losses or inconvenience
+
+2. Feature Requests (43 reviews • ⭐⭐⭐ 2.6)
+   Reviews suggesting new features, improvements, or enhancements to the app, such as technical analysis tools or customization options
+
+3. User Experience (43 reviews • ⭐⭐⭐ 2.6)
+   Reviews focusing on the overall user experience, including navigation, interface, and usability issues
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "Yesterday, I installed the Groww app and began intraday trading. After buying stocks, I tried to exit my positions but faced an issue with the app. I called customer support and waited about 10 minutes. After a 43 Minute call, she was told that I needed to use a laptop to exit. I realised I would have been in a tough..."
+
+2. "I had a very pathetic experience with Groww. Their stop-loss and target features did not work properly. I would strongly advise others not to trade with Groww based on my experience. If you are in profit and have set a 30-point target,..."
+
+3. "One of the worst broker. I palced an order today but my app got a glitch where i was not able to see my open order. I had to keep a safe exit because today was expiry and i got panicked because it was a 3 pm trade. I had to book my loss of 40 points because of this glitch and did not want to lose all my..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION ROADMAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix App Glitches → Identify crash causes →...
+
+2. Enhance User Experience → Streamline navigation → Introduce...
+
+3. Add Feature Requests → Integrate technical analysis →...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 19:28:50
+Word count: 247

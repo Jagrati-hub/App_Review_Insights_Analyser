@@ -25,7 +25,7 @@ class ThemeAnalyzer:
         self,
         reviews: list[Review],
         max_themes: int = 5,
-        batch_size: int = 200
+        batch_size: int = 150  # Reduced from 200 to 150 for faster processing
     ) -> tuple[list[Theme], AnalysisMetadata]:
         """
         Identify themes across reviews using Groq LLM.

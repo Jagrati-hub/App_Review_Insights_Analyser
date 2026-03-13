@@ -1,0 +1,48 @@
+To: rahulocean3@gmail.com
+Subject: Play Store Pulse Report - Week of Feb 19 to Mar 12, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 1060 Google Play Store reviews (Avg Rating: 3.35⭐) from February 19 to March 12, 2026.
+Positive Reviews (4-5★): 537 | Negative Reviews (1-3★): 405
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Technical Issues and Glitches (728 reviews • ⭐⭐⭐ 3.1)
+   Users have reported various technical issues and glitches while using the Groww app, including delayed order execution, buffering, and difficulties with logging in or accessing certain features.
+
+2. High Brokerage Charges (715 reviews • ⭐⭐⭐ 3.1)
+   Users are unhappy with the high brokerage charges and fees associated with using the Groww app, which they feel are eating into their profits.
+
+3. Ease of Use and Interface (654 reviews • ⭐⭐⭐ 3.4)
+   Users have praised the Groww app for its ease of use and intuitive interface, which makes it easy for beginners to navigate and start trading or investing.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "very low my amount in last 1 year , mid cap investment"
+
+2. "very bad from last 2 to 3 month mal function the software. and groww team is not accepting the things"
+
+3. "1 month ho gya abhi tak mutual fund ki payment received nahi hue"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION ROADMAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix Technical Issues → Identify bottlenecks → Optimize code → Reduce glitches by 40%
+
+2. Reduce Brokerage Charges → Analyze fee structure → Implement tiered pricing → Increase user retention by 25%
+
+3. Enhance User Experience → Streamline navigation → Add tutorial videos → Boost user engagement by 30%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 23:29:35
+Word count: 182

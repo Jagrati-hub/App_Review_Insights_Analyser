@@ -1,0 +1,822 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Weekly Pulse Report Of Groww</title>
+    <!--[if mso]>
+    <style type="text/css">
+        body, table, td {font-family: Arial, sans-serif !important;}
+    </style>
+    <![endif]-->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #1a202c;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 30px 10px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            width: 100%;
+        }
+        .email-wrapper {
+            max-width: 680px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+            width: 100%;
+        }
+        
+        /* Mobile Responsiveness */
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 5px !important;
+                width: 100% !important;
+            }
+            .email-wrapper {
+                border-radius: 8px !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+            }
+            .header {
+                padding: 25px 15px !important;
+            }
+            .header h1 {
+                font-size: 22px !important;
+                line-height: 1.3 !important;
+                word-wrap: break-word !important;
+            }
+            .header .emoji {
+                font-size: 36px !important;
+            }
+            .header p {
+                font-size: 14px !important;
+                line-height: 1.4 !important;
+            }
+            .stats-bar {
+                flex-wrap: wrap !important;
+                padding: 15px 10px !important;
+                gap: 8px !important;
+            }
+            .stat {
+                flex: 1 1 calc(50% - 8px) !important;
+                min-width: 0 !important;
+                padding: 12px 8px !important;
+                margin: 0 !important;
+            }
+            .stat-value {
+                font-size: 24px !important;
+                line-height: 1.2 !important;
+            }
+            .stat-label {
+                font-size: 9px !important;
+                line-height: 1.3 !important;
+            }
+            .content {
+                padding: 20px 15px !important;
+            }
+            .greeting {
+                padding: 15px !important;
+                font-size: 14px !important;
+                line-height: 1.6 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .section {
+                margin-bottom: 25px !important;
+            }
+            .section-title {
+                font-size: 18px !important;
+                line-height: 1.3 !important;
+                word-wrap: break-word !important;
+            }
+            .section-title .emoji {
+                font-size: 22px !important;
+            }
+            .theme-card {
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .theme-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px !important;
+            }
+            .theme-title {
+                font-size: 15px !important;
+                line-height: 1.4 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                width: 100% !important;
+            }
+            .theme-badge {
+                font-size: 11px !important;
+                padding: 5px 12px !important;
+                white-space: normal !important;
+                word-wrap: break-word !important;
+            }
+            .theme-description {
+                font-size: 13px !important;
+                line-height: 1.6 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .quote-card {
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .quote-text {
+                font-size: 13px !important;
+                line-height: 1.6 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .action-item {
+                padding: 15px !important;
+                margin-bottom: 15px !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .action-header {
+                margin-bottom: 12px !important;
+            }
+            .action-number {
+                min-width: 32px !important;
+                height: 32px !important;
+                font-size: 14px !important;
+            }
+            .action-title {
+                font-size: 15px !important;
+                line-height: 1.4 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+            }
+            .action-roadmap {
+                flex-direction: column !important;
+                gap: 8px !important;
+                margin-top: 10px !important;
+            }
+            .roadmap-step {
+                border-radius: 8px !important;
+                min-height: auto !important;
+                font-size: 12px !important;
+                padding: 10px !important;
+                line-height: 1.5 !important;
+                word-wrap: break-word !important;
+                overflow-wrap: break-word !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .roadmap-step::after {
+                content: '↓' !important;
+                display: block !important;
+                position: static !important;
+                margin: 6px auto 0 !important;
+                transform: none !important;
+                width: auto !important;
+                height: auto !important;
+            }
+            .roadmap-step:last-child::after {
+                display: none !important;
+            }
+            .roadmap-label {
+                font-size: 9px !important;
+            }
+            .footer {
+                padding: 20px 15px !important;
+            }
+            .footer p {
+                font-size: 12px !important;
+                line-height: 1.5 !important;
+                word-wrap: break-word !important;
+            }
+            .footer-meta {
+                font-size: 11px !important;
+            }
+            .footer-brand {
+                font-size: 10px !important;
+            }
+        }
+        .header {
+            background: linear-gradient(135deg, #5a67d8 0%, #667eea 50%, #764ba2 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .header .emoji {
+            font-size: 56px;
+            display: block;
+            margin-bottom: 15px;
+            animation: bounce 2s ease-in-out infinite;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .header p {
+            margin: 15px 0 0 0;
+            font-size: 19px;
+            opacity: 0.95;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stats-bar {
+            background: linear-gradient(to right, #f7fafc 0%, #edf2f7 100%);
+            padding: 30px;
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 3px solid #e2e8f0;
+            gap: 15px;
+        }
+        .stat {
+            text-align: center;
+            flex: 1;
+            padding: 20px 15px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .stat:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.15);
+            border-color: #667eea;
+        }
+        .stat-value {
+            font-size: 36px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 11px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            margin-top: 6px;
+        }
+        .content {
+            padding: 45px 35px;
+            background-color: #ffffff;
+        }
+        .greeting {
+            color: #2d3748;
+            margin-bottom: 35px;
+            font-size: 16px;
+            line-height: 1.8;
+            padding: 25px;
+            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+            border-left: 5px solid #667eea;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .section {
+            margin-bottom: 45px;
+        }
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 4px solid #e2e8f0;
+        }
+        .section-title .emoji {
+            font-size: 32px;
+            margin-right: 14px;
+            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.15));
+        }
+        .theme-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+            border-left: 6px solid #667eea;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 120px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent 0%, rgba(102,126,234,0.08) 100%);
+        }
+        .theme-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 24px rgba(102,126,234,0.2);
+            border-left-width: 8px;
+        }
+        .theme-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .theme-title {
+            font-size: 19px;
+            font-weight: 800;
+            color: #1a202c;
+            flex: 1;
+            line-height: 1.3;
+        }
+        .theme-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 24px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+            white-space: nowrap;
+        }
+        .theme-description {
+            font-size: 15px;
+            color: #4a5568;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+        .quote-card {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            border-left: 6px solid #fc8181;
+            padding: 24px 28px;
+            margin-bottom: 20px;
+            border-radius: 14px;
+            font-style: italic;
+            color: #2d3748;
+            box-shadow: 0 6px 16px rgba(252,129,129,0.12);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            font-size: 70px;
+            color: rgba(252,129,129,0.18);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        .quote-card:hover {
+            transform: translateX(6px);
+            box-shadow: 0 8px 24px rgba(252,129,129,0.25);
+            border-left-width: 8px;
+        }
+        .quote-text {
+            position: relative;
+            z-index: 1;
+            font-size: 15px;
+            line-height: 1.8;
+            font-weight: 500;
+        }
+        .action-item {
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+            border: 2px solid #e2e8f0;
+            padding: 24px;
+            margin-bottom: 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .action-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: linear-gradient(180deg, #48bb78 0%, #38a169 100%);
+        }
+        .action-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(72,187,120,0.15);
+            border-color: #48bb78;
+        }
+        .action-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f7fafc;
+        }
+        .action-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 18px;
+            margin-right: 16px;
+            box-shadow: 0 4px 12px rgba(72,187,120,0.4);
+            flex-shrink: 0;
+        }
+        .action-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a202c;
+            line-height: 1.3;
+        }
+        .action-roadmap {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            margin-top: 12px;
+            position: relative;
+        }
+        .roadmap-step {
+            flex: 1;
+            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #2d3748;
+            border: 2px solid #e2e8f0;
+            position: relative;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+        .roadmap-step:first-child {
+            border-radius: 10px 0 0 10px;
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border-color: #81e6d9;
+            font-weight: 600;
+        }
+        .roadmap-step:last-child {
+            border-radius: 0 10px 10px 0;
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border-color: #68d391;
+            font-weight: 600;
+            color: #22543d;
+        }
+        .roadmap-step:not(:first-child):not(:last-child) {
+            background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+        }
+        .roadmap-step::after {
+            content: '→';
+            position: absolute;
+            right: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            font-weight: 700;
+            color: #48bb78;
+            z-index: 10;
+            background: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .roadmap-step:last-child::after {
+            display: none;
+        }
+        .roadmap-label {
+            display: block;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #718096;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .roadmap-step:first-child .roadmap-label {
+            color: #2c7a7b;
+        }
+        .roadmap-step:last-child .roadmap-label {
+            color: #22543d;
+        }
+        .footer {
+            background: linear-gradient(to bottom, #f7fafc 0%, #edf2f7 100%);
+            padding: 30px;
+            text-align: center;
+            border-top: 2px solid #e2e8f0;
+        }
+        .footer p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #4a5568;
+        }
+        .footer strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        .divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent 0%, #cbd5e0 50%, transparent 100%);
+            margin: 20px 0;
+        }
+        .footer-meta {
+            color: #718096;
+            font-size: 12px;
+            margin-top: 15px;
+        }
+        .footer-brand {
+            color: #a0aec0;
+            font-size: 11px;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+        .logo {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            margin: 0 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-wrapper">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <span class="emoji">📊</span>
+                <h1>Weekly Pulse Report Of Groww</h1>
+                <p>Week of March 05 to March 12, 2026</p>
+            </div>
+        </div>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">437</div>
+                <div class="stat-label">Total Reviews</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">3.19</div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">206</div>
+                <div class="stat-label">Positive (4-5★)</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">188</div>
+                <div class="stat-label">Negative (1-3★)</div>
+            </div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">
+                <strong>Hi Team,</strong><br><br>
+                Here's your weekly pulse report based on <strong>437</strong> Google Play Store reviews 
+                from <strong>March 05</strong> to <strong>March 12, 2026</strong>.
+            </div>
+            
+            <!-- Top Themes Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">📊</span>
+                    <span>Top Themes</span>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-header">
+                        <div class="theme-title">1. Feature Requests</div>
+                        <div class="theme-badge">305 reviews • ⭐⭐⭐ 3.0</div>
+                    </div>
+                    <div class="theme-description">Users requesting new features or improvements to existing ones, such as adding more options for trading or improving the user interface</div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-header">
+                        <div class="theme-title">2. Customer Support</div>
+                        <div class="theme-badge">305 reviews • ⭐⭐⭐ 3.0</div>
+                    </div>
+                    <div class="theme-description">Users expressing dissatisfaction with the app's customer support, including unhelpful responses and lack of assistance</div>
+                </div>
+
+                <div class="theme-card">
+                    <div class="theme-header">
+                        <div class="theme-title">3. User Friendly</div>
+                        <div class="theme-badge">299 reviews • ⭐⭐⭐ 3.2</div>
+                    </div>
+                    <div class="theme-description">Users praising the app's ease of use, intuitive interface, and overall user experience</div>
+                </div>
+
+            </div>
+            
+            <!-- User Voices Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">💬</span>
+                    <span>User Voices</span>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-text">very low my amount in last 1 year , mid cap investment</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-text">It's unable to import external funds from the past 10 days. Why? is there any issue? If so, is there any ETR? And we dont have any complaints or escalation mechanisms in the app, please provide these.</div>
+                </div>
+
+                <div class="quote-card">
+                    <div class="quote-text">very bad from last 2 to 3 month mal function the software. and groww team is not accepting the things</div>
+                </div>
+
+            </div>
+            
+            <!-- Action Ideas Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="emoji">💡</span>
+                    <span>Action Roadmap</span>
+                </div>
+
+                <div class="action-item">
+                    <div class="action-header">
+                        <span class="action-number">1</span>
+                        <span class="action-title">Enhance Features</span>
+                    </div>
+
+                    <div class="action-roadmap">
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Action</span>
+                                <div>Add trading options</div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Step 1</span>
+                                <div>Integrate feedback system</div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Outcome</span>
+                                <div>Increase user engagement</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="action-item">
+                    <div class="action-header">
+                        <span class="action-number">2</span>
+                        <span class="action-title">Improve Support</span>
+                    </div>
+
+                    <div class="action-roadmap">
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Action</span>
+                                <div>Hire support agents</div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Step 1</span>
+                                <div>Implement ticketing system</div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Outcome</span>
+                                <div>Resolve 90% issues</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="action-item">
+                    <div class="action-header">
+                        <span class="action-number">3</span>
+                        <span class="action-title">Streamline UX</span>
+                    </div>
+
+                    <div class="action-roadmap">
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Action</span>
+                                <div>Simplify navigation</div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Step 1</span>
+                                <div>Conduct user testing</div>
+                            </div>
+                        </div>
+
+                        <div class="roadmap-step">
+                            <div>
+                                <span class="roadmap-label">Outcome</span>
+                                <div>Boost retention rates</div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Best regards,</strong></p>
+            <p><strong>Groww Product Team</strong></p>
+            <div class="divider"></div>
+            <p class="footer-meta">Report generated: March 14, 2026 at 00:03:02</p>
+            <p class="footer-brand">
+                <span class="logo"></span>
+                Powered by Groq LLM
+                <span class="logo"></span>
+                Groww Product Team
+                <span class="logo"></span>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

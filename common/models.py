@@ -32,6 +32,7 @@ class Theme:
     reviews: list[Review]  # Reviews belonging to this theme
     frequency: int  # Number of reviews in theme
     rank: int  # Ranking by frequency (1 = most common)
+    average_rating: Optional[float] = None  # Average rating for this theme
     
     def __post_init__(self):
         """Validate theme data."""
@@ -39,6 +40,10 @@ class Theme:
             raise ValueError("Frequency must match review count")
         if self.rank < 1:
             raise ValueError("Rank must be positive")
+        
+        # Calculate average rating if not provided
+        if self.average_rating is None and self.reviews:
+            self.average_rating = sum(r.rating for r in self.reviews) / len(self.reviews)
 
 
 @dataclass
@@ -52,6 +57,9 @@ class PulseReport:
     word_count: int  # Total word count
     review_count: int  # Total reviews analyzed
     generation_timestamp: datetime  # When report was created
+    average_rating: Optional[float] = None  # Average rating across all reviews
+    positive_count: Optional[int] = None  # Count of positive reviews (4-5 stars)
+    negative_count: Optional[int] = None  # Count of negative reviews (1-3 stars)
     
     def __post_init__(self):
         """Validate report constraints."""

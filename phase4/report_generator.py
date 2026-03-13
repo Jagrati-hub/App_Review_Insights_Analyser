@@ -60,16 +60,28 @@ class ReportGenerator:
         # Step 1: Select top 3 themes by frequency
         top_themes = self._select_top_themes(themes)
         
-        # Step 2: Select 3 quotes from different themes
+        # Step 2: Calculate overall statistics from all reviews across themes
+        all_reviews = []
+        for theme in themes:
+            all_reviews.extend(theme.reviews)
+        
+        # Remove duplicates (same review might be in multiple themes)
+        unique_reviews = {r.review_id: r for r in all_reviews}.values()
+        
+        average_rating = sum(r.rating for r in unique_reviews) / len(unique_reviews) if unique_reviews else 0.0
+        positive_count = sum(1 for r in unique_reviews if r.rating >= 4)
+        negative_count = sum(1 for r in unique_reviews if r.rating <= 3)
+        
+        # Step 3: Select 3 quotes from different themes
         quotes = self._select_quotes(top_themes)
         
-        # Step 3: Generate 3 action ideas using Groq LLM
+        # Step 4: Generate 3 action ideas using Groq LLM
         action_ideas = self._generate_action_ideas(top_themes)
         
-        # Step 4: Calculate word count
+        # Step 5: Calculate word count
         word_count = self._calculate_word_count(top_themes, quotes, action_ideas)
         
-        # Step 5: If word count exceeds limit, trim action ideas
+        # Step 6: If word count exceeds limit, trim action ideas
         if word_count > self.word_limit:
             # Try to trim action ideas to fit within limit
             words_over = word_count - self.word_limit
@@ -90,7 +102,7 @@ class ReportGenerator:
                 quotes = self._trim_quotes(quotes, words_over // 2 + 3)
                 word_count = self._calculate_word_count(top_themes, quotes, action_ideas)
         
-        # Step 6: Create PulseReport
+        # Step 7: Create PulseReport
         report = PulseReport(
             date_range=date_range,
             themes=top_themes,
@@ -98,10 +110,13 @@ class ReportGenerator:
             action_ideas=action_ideas,
             word_count=word_count,
             review_count=total_review_count,
-            generation_timestamp=datetime.now()
+            generation_timestamp=datetime.now(),
+            average_rating=round(average_rating, 2),
+            positive_count=positive_count,
+            negative_count=negative_count
         )
         
-        # Step 7: Create metadata
+        # Step 8: Create metadata
         metadata = GenerationMetadata(
             timestamp=datetime.now(),
             word_count=word_count,
@@ -357,21 +372,25 @@ class ReportGenerator:
         themes_text = "\n".join(theme_summaries)
         
         # Create prompt for action idea generation
-        prompt = f"""Based on the following user feedback themes from Google Play Store reviews, generate exactly 3 specific, actionable ideas that the product team should consider implementing.
+        prompt = f"""Based on the following user feedback themes from Google Play Store reviews, generate exactly 3 specific, actionable roadmap items that the product team should consider implementing.
 
 THEMES:
 {themes_text}
 
 REQUIREMENTS:
-- Each action idea should be specific and implementable
+- Each action should be formatted as a roadmap item with clear steps
+- Format: "Action Title → Step 1 → Step 2 → Expected Outcome"
 - Focus on addressing the most impactful themes
-- Keep each action idea VERY concise (1 sentence, max 20 words each)
+- Keep each action concise but structured (max 25 words each)
 - Make them practical and realistic
 - Number them 1, 2, 3
 
+EXAMPLE FORMAT:
+["Improve Onboarding → Simplify KYC flow → Add progress indicators → Reduce drop-off by 30%", "Fix Performance → Optimize API calls → Implement caching → Reduce load time to <2s", "Enhance Support → Add in-app chat → Train AI bot → Resolve 80% queries instantly"]
+
 FORMAT:
-Return ONLY a JSON array with 3 action ideas, like this:
-["Action idea 1", "Action idea 2", "Action idea 3"]
+Return ONLY a JSON array with 3 action roadmap items, like this:
+["Action roadmap 1", "Action roadmap 2", "Action roadmap 3"]
 
 Do not include any other text or explanation."""
         

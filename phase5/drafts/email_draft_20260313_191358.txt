@@ -1,0 +1,48 @@
+To: manshuc12@gmail.com
+Subject: Play Store Pulse Report - Week of Jan 21 to Mar 10, 2026
+
+Hi Team,
+
+Here's your weekly pulse report based on 39 Google Play Store reviews (Avg Rating: 2.64⭐) from January 21 to March 10, 2026.
+Positive Reviews (4-5★): 16 | Negative Reviews (1-3★): 23
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📊 TOP THEMES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Trading Issues (39 reviews • ⭐⭐⭐ 2.6)
+   Reviews that mention problems with trading, such as glitches, delays, or incorrect order execution. These issues can lead to financial losses and frustration for users.
+
+2. App Performance (39 reviews • ⭐⭐⭐ 2.6)
+   Reviews that discuss the app's performance, including issues with loading, updating, and responsiveness. These issues can affect the overall user experience and satisfaction with the app.
+
+3. Feature Requests (39 reviews • ⭐⭐⭐ 2.6)
+   Reviews that suggest new features or improvements to existing ones, such as adding more technical analysis tools or customizing the user interface. These requests can help the app stay competitive and meet user needs.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💬 USER VOICES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. "Yesterday, I installed the Groww app and began intraday trading. After buying stocks, I tried to exit my positions but faced an issue with the app. I called customer support and waited about 10 minutes. After a 43 Minute call, she was told that I needed to..."
+
+2. "I had a very pathetic experience with Groww. Their stop-loss and target features did not work properly. I would strongly advise others not to trade with Groww based..."
+
+3. "One of the worst broker. I palced an order today but my app got a glitch where i was not able to see my open order. I had to keep a safe exit because today was expiry and i got panicked because it was a 3 pm trade. I had to book my loss of..."
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 ACTION ROADMAP
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Fix Trading Issues → Identify glitch causes →...
+
+2. Optimize App Performance → Streamline API calls →...
+
+3. Enhance User Experience → Add customizable UI →...
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Best regards,
+Groww Product Team
+
+Report generated: 2026-03-13 19:13:58
+Word count: 245

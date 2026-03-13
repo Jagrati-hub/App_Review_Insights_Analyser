@@ -22,13 +22,14 @@ Then open http://localhost:3000
 
 ## 📋 What This Does
 
-1. **Scrapes** 5,000 reviews from Google Play Store (Groww app)
+1. **Scrapes** 2,000 reviews from Google Play Store (Groww app)
 2. **Filters** non-English reviews, removes emojis and PII
 3. **Analyzes** themes using Groq LLM (llama-3.3-70b-versatile)
 4. **Generates** a 250-word pulse report with top 3 themes
-5. **Creates** an email draft ready to send
+5. **Creates** HTML email and sends via SMTP
+6. **Saves** plain text draft locally
 
-**Processing time**: 3-7 minutes
+**Processing time**: 1.5-3 minutes (optimized for 2000 reviews)
 
 ## 🏗️ Architecture
 
@@ -36,6 +37,7 @@ Then open http://localhost:3000
 ┌─────────────────────┐         ┌──────────────────────┐
 │   Next.js Frontend  │ ◄─────► │   Flask Backend API  │
 │   (Port 3000)       │  HTTP   │   (Port 5000)        │
+│   Corporate Theme   │         │   REST Endpoints     │
 └─────────────────────┘         └──────────────────────┘
                                           │
                                           ▼
@@ -45,17 +47,61 @@ Then open http://localhost:3000
                                  │  - Phase 3: Analyze│
                                  │  - Phase 4: Report │
                                  │  - Phase 5: Email  │
+                                 │    (HTML Template) │
                                  └────────────────────┘
                                           ▲
                                           │
                                  ┌────────────────────┐
-                                 │  Weekly Scheduler  │
-                                 │  (Phase 6)         │
-                                 │  Every Week 1PM IST│
-                                 │  → manshuc12@      │
-                                 │     gmail.com      │
+                                 │  Scheduler (Phase6)│
+                                 │  Every 180 min     │
+                                 │  (00:00, 03:00,    │
+                                 │   06:00, 09:00,    │
+                                 │   12:00, 15:00,    │
+                                 │   18:00, 21:00 IST)│
+                                 │  → SMTP Email      │
+                                 └────────────────────┘
+                                          │
+                                          ▼
+                                 ┌────────────────────┐
+                                 │  GitHub Actions    │
+                                 │  - Scheduled       │
+                                 │  - Manual Trigger  │
+                                 │  - Test Pipeline   │
                                  └────────────────────┘
 ```
+
+### Key Components
+
+**Frontend (Next.js)**
+- Corporate-friendly blue theme with high contrast
+- Responsive design for mobile and desktop
+- Real-time progress tracking
+- Report visualization with statistics
+
+**Backend (Flask API)**
+- RESTful endpoints for pipeline orchestration
+- CORS-enabled for frontend communication
+- Health checks and configuration management
+- Optimized for 2000 reviews (1.5-3 min processing)
+
+**Email System (Phase 5)**
+- HTML emails with inline styles for email client compatibility
+- Table-based layout for maximum compatibility
+- Colorful gradient header and themed sections
+- Plain text drafts saved locally (.txt)
+- SMTP integration for automatic sending
+
+**Scheduler (Phase 6)**
+- Runs every 180 minutes (8 times daily)
+- Fixed schedule aligned with IST timezone
+- Automatic error handling and logging
+- Report archiving in phase6/reports/
+
+**GitHub Actions**
+- Scheduled workflow (configurable cron)
+- Manual trigger workflow
+- Test pipeline workflow
+- Automated cloud execution
 
 ## 📁 Project Structure
 
@@ -87,14 +133,26 @@ Then open http://localhost:3000
 │   ├── run_phase4.py      # Phase 4 execution script
 │   └── phase4/output/     # Generated reports
 │
-├── phase5/                # Phase 5: Email Drafting
-│   ├── email_drafter.py   # Email formatting
+├── phase5/                # Phase 5: Email Drafting & SMTP
+│   ├── email_drafter.py   # Email formatting and SMTP sending
+│   ├── email_template_inline.py  # HTML email template (inline styles)
 │   ├── run_phase5.py      # Phase 5 execution script
-│   └── drafts/            # Email drafts
+│   ├── test_email.py      # Email testing utility
+│   └── drafts/            # Plain text email drafts (.txt)
 │
 ├── phase6/                # Phase 6: Automated Scheduling
-│   ├── scheduler.py       # Weekly pulse scheduler
+│   ├── scheduler.py       # Scheduler (every 180 min, 8x daily)
+│   ├── logs/              # Scheduler logs
+│   │   └── scheduler.log
 │   └── reports/           # Scheduled report outputs
+│
+├── .github/               # GitHub Actions Workflows
+│   ├── workflows/
+│   │   ├── scheduled-pulse-report.yml  # Scheduled workflow
+│   │   ├── manual-pulse-report.yml     # Manual trigger
+│   │   └── test-pipeline.yml           # Test workflow
+│   ├── GITHUB_ACTIONS_GUIDE.md  # GitHub Actions setup guide
+│   └── README.md          # GitHub Actions overview
 │
 ├── frontend/              # Next.js Frontend
 │   ├── app/              # Next.js pages
@@ -120,7 +178,8 @@ Then open http://localhost:3000
 ## ✨ Features
 
 ### Phase 1: Review Scraping & PII Filtering
-- ✅ Scrapes up to 5,000 reviews from Google Play Store (Groww app)
+- ✅ Scrapes up to 2000 reviews from Google Play Store (Groww app)
+- ✅ Optimized batch size (150) and delay (0.5s) for faster processing
 - ✅ Filters reviews with fewer than 5 words
 - ✅ Removes non-English reviews (language detection)
 - ✅ Removes emojis from review text
@@ -144,27 +203,36 @@ Then open http://localhost:3000
 - ✅ 3 diverse user quotes
 - ✅ 3 AI-generated action ideas
 
-### Phase 5: Email Drafting
-- ✅ Professional email formatting
-- ✅ Ready-to-send drafts
-- ✅ Configurable recipients
-- ✅ Email preview in UI
+### Phase 5: Email Drafting & SMTP
+- ✅ Professional HTML email formatting with inline styles
+- ✅ Table-based layout for email client compatibility
+- ✅ Colorful gradient header and themed sections
+- ✅ Plain text drafts saved locally (.txt files)
 - ✅ Automatic SMTP email sending (Gmail)
+- ✅ Mobile-responsive email design
+- ✅ Statistics display (avg rating, positive/negative breakdown)
+- ✅ Theme-level statistics with review counts
+- ✅ Action roadmap visualization with step-by-step format
 
 ### Phase 2: Web UI (Next.js)
 - ✅ Modern, responsive interface
+- ✅ Corporate-friendly blue theme with high contrast
 - ✅ Configuration form with validation
 - ✅ Real-time progress tracking
 - ✅ Report display with themes, quotes, and actions
 - ✅ Email preview
+- ✅ Mobile and desktop optimized
 
 ### Phase 6: Automated Scheduling
-- ✅ Weekly automated report generation
-- ✅ Configurable schedule (default: every 5 minutes)
-- ✅ Fixed recipient email (manshuc12@gmail.com)
+- ✅ Automated report generation every 180 minutes (8x daily)
+- ✅ Fixed schedule: 00:00, 03:00, 06:00, 09:00, 12:00, 15:00, 18:00, 21:00 IST
+- ✅ Configurable recipient email
 - ✅ Automatic report archiving
-- ✅ Logging and error handling
+- ✅ Comprehensive logging (phase6/logs/scheduler.log)
+- ✅ Error handling and recovery
 - ✅ GitHub Actions integration for cloud execution
+- ✅ Manual trigger support
+- ✅ Test pipeline for validation
 
 ## 🛠️ Technology Stack
 
@@ -196,8 +264,10 @@ Key settings in `common/config.py`:
 # Groq LLM Settings
 GROQ_MODEL = 'llama-3.3-70b-versatile'
 
-# Scraper Settings
-SCRAPER_MAX_REVIEWS = 5000
+# Scraper Settings (Optimized)
+SCRAPER_MAX_REVIEWS = 2000  # Reduced from 5000 for faster processing
+SCRAPER_BATCH_SIZE = 150    # Reduced from 200
+SCRAPER_DELAY = 0.5         # Reduced from 1.0s
 SCRAPER_MIN_WORD_COUNT = 5
 SCRAPER_FILTER_NON_ENGLISH = True
 SCRAPER_REMOVE_EMOJIS = True
@@ -207,6 +277,15 @@ MIN_WEEKS = 8
 MAX_WEEKS = 12
 MAX_THEMES = 5
 REPORT_WORD_LIMIT = 250
+
+# Email Settings
+SMTP_SERVER = 'smtp.gmail.com'
+SMTP_PORT = 587
+SENDER_EMAIL = 'your-email@gmail.com'
+SENDER_NAME = 'Groww Product Team'
+
+# Scheduler Settings
+SCHEDULER_INTERVAL_MINUTES = 180  # Run every 3 hours
 ```
 
 ## 🧪 Testing

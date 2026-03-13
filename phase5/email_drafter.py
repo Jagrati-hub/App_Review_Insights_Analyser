@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from common.models import PulseReport, DraftMetadata
 from common.config import Config
+from phase5.email_template_inline import generate_html_email
 
 logger = logging.getLogger(__name__)
 
@@ -71,15 +72,15 @@ class EmailDrafter:
         # Format subject line with date range
         subject = self._format_subject(report)
         
-        # Format HTML body (for email)
-        html_body = self._format_html_body(report, sender_name)
+        # Format plain text body (for draft)
+        text_body = self._format_body(report, sender_name)
+        email_content = self._format_email(subject, recipient, text_body)
         
-        # For draft file, create a simple text version
-        plain_body = self._format_body(report, sender_name)
-        email_content = self._format_email(subject, recipient, plain_body)
-        
-        # Save to file
+        # Save plain text draft
         output_path = self._save_draft(email_content, report)
+        
+        # Format HTML body (for email only)
+        html_body = self._format_html_body(report, sender_name)
         
         # Send email if enabled (HTML only)
         email_sent = False
@@ -131,7 +132,16 @@ class EmailDrafter:
         # Greeting
         lines.append("Hi Team,")
         lines.append("")
-        lines.append(f"Here's your weekly pulse report based on {report.review_count} Google Play Store reviews from {report.date_range[0].strftime('%B %d')} to {report.date_range[1].strftime('%B %d, %Y')}.")
+        
+        # Add statistics
+        stats_line = f"Here's your weekly pulse report based on {report.review_count} Google Play Store reviews"
+        if report.average_rating:
+            stats_line += f" (Avg Rating: {report.average_rating}⭐)"
+        stats_line += f" from {report.date_range[0].strftime('%B %d')} to {report.date_range[1].strftime('%B %d, %Y')}."
+        lines.append(stats_line)
+        
+        if report.positive_count is not None and report.negative_count is not None:
+            lines.append(f"Positive Reviews (4-5★): {report.positive_count} | Negative Reviews (1-3★): {report.negative_count}")
         lines.append("")
         
         # Top Themes Section
@@ -142,7 +152,9 @@ class EmailDrafter:
         
         for i, theme in enumerate(report.themes, 1):
             freq = getattr(theme, 'actual_frequency', theme.frequency)
-            lines.append(f"{i}. {theme.label} ({freq} reviews)")
+            avg_rating = theme.average_rating if theme.average_rating else 0.0
+            stars = '⭐' * int(round(avg_rating))
+            lines.append(f"{i}. {theme.label} ({freq} reviews • {stars} {avg_rating:.1f})")
             lines.append(f"   {theme.description}")
             lines.append("")
         
@@ -158,7 +170,7 @@ class EmailDrafter:
         
         # Action Ideas Section
         lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        lines.append("💡 ACTION IDEAS")
+        lines.append("💡 ACTION ROADMAP")
         lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         lines.append("")
         
@@ -197,10 +209,10 @@ class EmailDrafter:
         return "\n".join(lines)
     
     def _save_draft(self, email_content: str, report: PulseReport) -> Path:
-        """Save email draft to file.
+        """Save email draft to file as plain text.
         
         Args:
-            email_content: Complete email content
+            email_content: Complete plain text email content
             report: PulseReport object (for timestamp)
         
         Returns:
@@ -231,446 +243,19 @@ class EmailDrafter:
         print("=" * 80 + "\n")
     
     def _format_html_body(self, report: PulseReport, sender_name: str) -> str:
-        """Format email body as HTML with attractive styling.
+        """Format email body as HTML with inline styles for email client compatibility.
         
         Args:
             report: PulseReport object
             sender_name: Name of sender
         
         Returns:
-            HTML email body string
+            HTML email body string with inline styles
         """
         start_date = report.date_range[0].strftime("%B %d")
         end_date = report.date_range[1].strftime("%B %d, %Y")
         
-        html = f"""
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #1a202c;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            margin: 0;
-            padding: 20px 0;
-        }}
-        .email-wrapper {{
-            max-width: 650px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }}
-        .header {{
-            background: linear-gradient(135deg, #5a67d8 0%, #667eea 50%, #764ba2 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }}
-        .header::before {{
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: pulse 15s ease-in-out infinite;
-        }}
-        @keyframes pulse {{
-            0%, 100% {{ transform: scale(1); }}
-            50% {{ transform: scale(1.1); }}
-        }}
-        .header-content {{
-            position: relative;
-            z-index: 1;
-        }}
-        .header h1 {{
-            margin: 0;
-            font-size: 32px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-        .header .emoji {{
-            font-size: 48px;
-            display: block;
-            margin-bottom: 10px;
-            animation: bounce 2s ease-in-out infinite;
-        }}
-        @keyframes bounce {{
-            0%, 100% {{ transform: translateY(0); }}
-            50% {{ transform: translateY(-10px); }}
-        }}
-        .header p {{
-            margin: 12px 0 0 0;
-            font-size: 18px;
-            opacity: 0.95;
-            font-weight: 500;
-        }}
-        .stats-bar {{
-            background: linear-gradient(to right, #f7fafc 0%, #edf2f7 100%);
-            padding: 25px 30px;
-            display: flex;
-            justify-content: space-around;
-            border-bottom: 2px solid #e2e8f0;
-            gap: 20px;
-        }}
-        .stat {{
-            text-align: center;
-            flex: 1;
-            padding: 10px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease;
-        }}
-        .stat:hover {{
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }}
-        .stat-value {{
-            font-size: 32px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }}
-        .stat-label {{
-            font-size: 11px;
-            color: #718096;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            margin-top: 4px;
-        }}
-        .content {{
-            padding: 40px 30px;
-            background-color: #ffffff;
-        }}
-        .greeting {{
-            color: #2d3748;
-            margin-bottom: 30px;
-            font-size: 15px;
-            line-height: 1.8;
-            padding: 20px;
-            background: linear-gradient(to right, #f7fafc 0%, #ffffff 100%);
-            border-left: 4px solid #667eea;
-            border-radius: 8px;
-        }}
-        .section {{
-            margin-bottom: 40px;
-        }}
-        .section-title {{
-            font-size: 24px;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 3px solid #e2e8f0;
-        }}
-        .section-title .emoji {{
-            font-size: 28px;
-            margin-right: 12px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-        }}
-        .theme-card {{
-            background: linear-gradient(135deg, #f7fafc 0%, #ffffff 100%);
-            border-left: 5px solid #667eea;
-            padding: 20px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }}
-        .theme-card::before {{
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100px;
-            height: 100%;
-            background: linear-gradient(90deg, transparent 0%, rgba(102,126,234,0.05) 100%);
-        }}
-        .theme-card:hover {{
-            transform: translateX(4px);
-            box-shadow: 0 6px 20px rgba(102,126,234,0.15);
-        }}
-        .theme-header {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            position: relative;
-            z-index: 1;
-        }}
-        .theme-title {{
-            font-size: 18px;
-            font-weight: 700;
-            color: #1a202c;
-            flex: 1;
-        }}
-        .theme-badge {{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(102,126,234,0.3);
-            white-space: nowrap;
-        }}
-        .theme-description {{
-            font-size: 15px;
-            color: #4a5568;
-            line-height: 1.7;
-            position: relative;
-            z-index: 1;
-        }}
-        .quote-card {{
-            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
-            border-left: 5px solid #fc8181;
-            padding: 20px 24px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            font-style: italic;
-            color: #2d3748;
-            box-shadow: 0 4px 12px rgba(252,129,129,0.1);
-            position: relative;
-            transition: all 0.3s ease;
-        }}
-        .quote-card::before {{
-            content: '"';
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 60px;
-            color: rgba(252,129,129,0.15);
-            font-family: Georgia, serif;
-            line-height: 1;
-        }}
-        .quote-card:hover {{
-            transform: translateX(4px);
-            box-shadow: 0 6px 20px rgba(252,129,129,0.2);
-        }}
-        .quote-text {{
-            position: relative;
-            z-index: 1;
-            font-size: 15px;
-            line-height: 1.7;
-        }}
-        .action-item {{
-            background: linear-gradient(135deg, #f0fff4 0%, #ffffff 100%);
-            border-left: 5px solid #48bb78;
-            padding: 20px;
-            margin-bottom: 16px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(72,187,120,0.1);
-            display: flex;
-            align-items: flex-start;
-            transition: all 0.3s ease;
-        }}
-        .action-item:hover {{
-            transform: translateX(4px);
-            box-shadow: 0 6px 20px rgba(72,187,120,0.2);
-        }}
-        .action-number {{
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            min-width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 16px;
-            margin-right: 16px;
-            box-shadow: 0 2px 8px rgba(72,187,120,0.3);
-            flex-shrink: 0;
-        }}
-        .action-text {{
-            flex: 1;
-            font-size: 15px;
-            color: #2d3748;
-            line-height: 1.7;
-        }}
-        .footer {{
-            background: linear-gradient(to bottom, #f7fafc 0%, #edf2f7 100%);
-            padding: 30px;
-            text-align: center;
-            border-top: 2px solid #e2e8f0;
-        }}
-        .footer p {{
-            margin: 8px 0;
-            font-size: 14px;
-            color: #4a5568;
-        }}
-        .footer strong {{
-            color: #2d3748;
-            font-weight: 600;
-        }}
-        .divider {{
-            height: 2px;
-            background: linear-gradient(to right, transparent 0%, #cbd5e0 50%, transparent 100%);
-            margin: 20px 0;
-        }}
-        .footer-meta {{
-            color: #718096;
-            font-size: 12px;
-            margin-top: 15px;
-        }}
-        .footer-brand {{
-            color: #a0aec0;
-            font-size: 11px;
-            margin-top: 10px;
-            font-weight: 500;
-        }}
-        .logo {{
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            margin: 0 4px;
-        }}
-    </style>
-</head>
-<body>
-    <div class="email-wrapper">
-        <!-- Header -->
-        <div class="header">
-            <div class="header-content">
-                <span class="emoji">📊</span>
-                <h1>Play Store Pulse Report</h1>
-                <p>Week of {start_date} to {end_date}</p>
-            </div>
-        </div>
-        
-        <!-- Stats Bar -->
-        <div class="stats-bar">
-            <div class="stat">
-                <div class="stat-value">{report.review_count}</div>
-                <div class="stat-label">Reviews</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">{len(report.themes)}</div>
-                <div class="stat-label">Themes</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value">{report.word_count}</div>
-                <div class="stat-label">Words</div>
-            </div>
-        </div>
-        
-        <!-- Content -->
-        <div class="content">
-            <div class="greeting">
-                <strong>Hi Team,</strong><br><br>
-                Here's your weekly pulse report based on <strong>{report.review_count}</strong> Google Play Store reviews 
-                from <strong>{start_date}</strong> to <strong>{end_date}</strong>.
-            </div>
-            
-            <!-- Top Themes Section -->
-            <div class="section">
-                <div class="section-title">
-                    <span class="emoji">📊</span>
-                    <span>Top Themes</span>
-                </div>
-"""
-        
-        # Add themes
-        for i, theme in enumerate(report.themes, 1):
-            freq = getattr(theme, 'actual_frequency', theme.frequency)
-            html += f"""
-                <div class="theme-card">
-                    <div class="theme-header">
-                        <div class="theme-title">{i}. {theme.label}</div>
-                        <div class="theme-badge">{freq} reviews</div>
-                    </div>
-                    <div class="theme-description">{theme.description}</div>
-                </div>
-"""
-        
-        html += """
-            </div>
-            
-            <!-- User Voices Section -->
-            <div class="section">
-                <div class="section-title">
-                    <span class="emoji">💬</span>
-                    <span>User Voices</span>
-                </div>
-"""
-        
-        # Add quotes
-        for quote in report.quotes:
-            html += f"""
-                <div class="quote-card">
-                    <div class="quote-text">{quote}</div>
-                </div>
-"""
-        
-        html += """
-            </div>
-            
-            <!-- Action Ideas Section -->
-            <div class="section">
-                <div class="section-title">
-                    <span class="emoji">💡</span>
-                    <span>Action Ideas</span>
-                </div>
-"""
-        
-        # Add action ideas
-        for i, idea in enumerate(report.action_ideas, 1):
-            html += f"""
-                <div class="action-item">
-                    <span class="action-number">{i}</span>
-                    <span class="action-text">{idea}</span>
-                </div>
-"""
-        
-        html += f"""
-            </div>
-        </div>
-        
-        <!-- Footer -->
-        <div class="footer">
-            <p><strong>Best regards,</strong></p>
-            <p><strong>{sender_name}</strong></p>
-            <div class="divider"></div>
-            <p class="footer-meta">Report generated: {report.generation_timestamp.strftime('%B %d, %Y at %H:%M:%S')}</p>
-            <p class="footer-brand">
-                <span class="logo"></span>
-                Powered by Groq LLM
-                <span class="logo"></span>
-                Groww Product Team
-                <span class="logo"></span>
-            </p>
-        </div>
-    </div>
-</body>
-</html>
-"""
-        return html
+        return generate_html_email(report, sender_name, start_date, end_date)
     
     def _send_email_html_only(self, recipient: str, subject: str, html_body: str) -> None:
         """Send email via SMTP with HTML only (no plain text fallback).
@@ -691,15 +276,12 @@ class EmailDrafter:
             raise ValueError("Sender email not configured. Set SENDER_EMAIL in .env")
         
         try:
-            # Create message with HTML only
-            message = MIMEMultipart()
+            # Create HTML-only message
+            message = MIMEText(html_body, 'html', 'utf-8')
             message['From'] = f"{self.sender_name} <{self.sender_email}>"
             message['To'] = recipient
             message['Subject'] = subject
-            
-            # Attach HTML version only
-            html_part = MIMEText(html_body, 'html', 'utf-8')
-            message.attach(html_part)
+            message['Content-Type'] = 'text/html; charset=utf-8'
             
             # Connect to SMTP server
             logger.info(f"Connecting to SMTP server: {self.smtp_server}:{self.smtp_port}")

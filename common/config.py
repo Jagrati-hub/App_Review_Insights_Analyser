@@ -45,11 +45,18 @@ class Config:
     SECRET_KEY = os.getenv('FLASK_SECRET_KEY', 'dev-secret-key-change-in-production')
     FLASK_ENV = os.getenv('FLASK_ENV', 'development')
     
-    # Groq API settings
+    # Groq API settings - supports multiple keys for rotation on rate limit
     GROQ_API_KEY = get_config_value('GROQ_API_KEY', '', ['groq', 'api_key'])
+    GROQ_API_KEYS = [k for k in [
+        get_config_value('GROQ_API_KEY', '', ['groq', 'api_key']),
+        get_config_value('GROQ_API_KEY_2', '', ['groq', 'api_key_2']),
+        get_config_value('GROQ_API_KEY_3', '', ['groq', 'api_key_3']),
+        get_config_value('GROQ_API_KEY_4', '', ['groq', 'api_key_4']),
+        get_config_value('GROQ_API_KEY_5', '', ['groq', 'api_key_5']),
+    ] if k]
     GROQ_MODEL = 'llama-3.3-70b-versatile'  # Fast model
     GROQ_TIMEOUT = 30  # Reduced from 45 to 30 for faster processing
-    GROQ_MAX_RETRIES = 1  # Reduced from 2 to 1 for speed
+    GROQ_MAX_RETRIES = 2  # Retry once with fallback model on rate limit
     
     # Scraper settings - Optimized for <1 minute processing
     APP_ID = os.getenv('APP_ID', 'com.nextbillion.groww')
@@ -57,12 +64,18 @@ class Config:
     SCRAPER_COUNTRY = 'us'
     SCRAPER_BATCH_SIZE = 100  # Reduced from 200 to 100
     SCRAPER_DELAY = 0.2  # Reduced from 0.5 to 0.2 seconds
-    SCRAPER_MAX_REVIEWS = 500  # Reduced from 2000 to 500 for <1 min
+    SCRAPER_MAX_REVIEWS = 1000  # Increased to 1000 for better coverage
     SCRAPER_MIN_WORD_COUNT = 5
     SCRAPER_FILTER_NON_ENGLISH = True
     SCRAPER_REMOVE_EMOJIS = True
     
-    # Analysis settings
+    # Gemini API keys (fallback when Groq is rate limited)
+    GEMINI_API_KEYS = [k for k in [
+        os.getenv('Gemini_api_key_1', ''),
+        os.getenv('Gemini_api_key_2', ''),
+        os.getenv('Gemini_api_key_3', ''),
+    ] if k]
+    GEMINI_MODEL = 'gemini-1.5-flash'
     MIN_WEEKS = int(os.getenv('MIN_WEEKS', 8))
     MAX_WEEKS = int(os.getenv('MAX_WEEKS', 12))
     MAX_THEMES = int(os.getenv('MAX_THEMES', 5))

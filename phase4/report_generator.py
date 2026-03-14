@@ -17,22 +17,25 @@ class ReportGenerator:
     """Generates weekly pulse reports from analyzed themes."""
     
     def __init__(self, groq_api_key: Optional[str] = None):
-        """Initialize report generator with Groq API client.
-        
-        Args:
-            groq_api_key: Groq API key (defaults to Config.GROQ_API_KEY)
-        """
-        self.api_key = groq_api_key or Config.GROQ_API_KEY
-        if not self.api_key:
+        """Initialize report generator with Groq API client."""
+        self.api_keys = Config.GROQ_API_KEYS if Config.GROQ_API_KEYS else [groq_api_key or Config.GROQ_API_KEY]
+        if not self.api_keys:
             raise ValueError("Groq API key is required")
         
-        self.client = Groq(api_key=self.api_key)
+        self.current_key_index = 0
+        self.client = Groq(api_key=self.api_keys[0])
         self.model = Config.GROQ_MODEL
         self.timeout = Config.GROQ_TIMEOUT
         self.max_retries = Config.GROQ_MAX_RETRIES
         self.word_limit = Config.REPORT_WORD_LIMIT
         self.quote_count = Config.QUOTE_COUNT
         self.action_count = Config.ACTION_COUNT
+
+    def _next_client(self):
+        """Rotate to the next available API key."""
+        self.current_key_index = (self.current_key_index + 1) % len(self.api_keys)
+        self.client = Groq(api_key=self.api_keys[self.current_key_index])
+        print(f"Rotated to API key #{self.current_key_index + 1}")
     
     def generate_report(
         self,
@@ -389,11 +392,15 @@ EXAMPLE:
 
 Return ONLY a valid JSON array with exactly 3 strings. No other text."""
         
-        # Call Groq API with retry logic
-        for attempt in range(self.max_retries):
+        # Call Groq API with retry logic — rotates API keys on rate limit
+        models_to_try = [self.model, 'llama-3.1-8b-instant']
+        total_attempts = max(self.max_retries, len(self.api_keys))
+
+        for attempt in range(total_attempts):
+            model = models_to_try[min(attempt, len(models_to_try) - 1)]
             try:
                 response = self.client.chat.completions.create(
-                    model=self.model,
+                    model=model,
                     messages=[
                         {
                             "role": "system",
@@ -408,24 +415,44 @@ Return ONLY a valid JSON array with exactly 3 strings. No other text."""
                     max_tokens=800,
                     timeout=self.timeout
                 )
-                
-                # Parse response
+
                 content = response.choices[0].message.content.strip()
-                
-                # Try to extract JSON array
                 action_ideas = self._parse_action_ideas(content)
-                
+
                 if len(action_ideas) == 3:
                     return action_ideas
                 else:
                     print(f"Warning: Expected 3 action ideas, got {len(action_ideas)}. Retrying...")
                     continue
-                
+
             except Exception as e:
-                print(f"Attempt {attempt + 1}/{self.max_retries} failed: {str(e)}")
-                if attempt == self.max_retries - 1:
+                err = str(e)
+                print(f"Attempt {attempt + 1}/{total_attempts} failed ({model}, key #{self.current_key_index + 1}): {err}")
+
+                if 'rate_limit_exceeded' in err or '429' in err:
+                    # Try rotating to next key first
+                    if len(self.api_keys) > 1:
+                        self._next_client()
+                        print(f"Switched to API key #{self.current_key_index + 1}")
+                    else:
+                        import time
+                        print("No backup keys — trying Gemini fallback...")
+                        try:
+                            from phase3.groq_client import _call_gemini_fallback
+                            gemini_resp = _call_gemini_fallback([
+                                {"role": "system", "content": "You are a product manager expert at analyzing user feedback and generating actionable product improvements."},
+                                {"role": "user", "content": prompt}
+                            ], max_tokens=800)
+                            ideas = self._parse_action_ideas(gemini_resp)
+                            if len(ideas) == 3:
+                                return ideas
+                        except Exception as gem_err:
+                            print(f"Gemini fallback failed: {gem_err}")
+                            time.sleep(15)
+
+                if attempt == total_attempts - 1:
                     raise Exception(
-                        f"Failed to generate action ideas after {self.max_retries} attempts: {str(e)}"
+                        f"Failed to generate action ideas after {total_attempts} attempts: {err}"
                     )
         
         raise Exception("Failed to generate action ideas")

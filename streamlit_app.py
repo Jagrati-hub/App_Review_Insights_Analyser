@@ -321,7 +321,7 @@ def run_analysis(weeks_back: int, recipient_email: str):
     try:
         # Phase 1: Scrape Reviews
         status_text.text("📥 Phase 1: Scraping reviews from Google Play Store...")
-        progress_bar.progress(10)
+        progress_bar.progress(5)
         
         # Create scraper config
         scraper_config = ScraperConfig(
@@ -337,16 +337,30 @@ def run_analysis(weeks_back: int, recipient_email: str):
         )
         
         scraper = ReviewScraper(scraper_config)
+        progress_bar.progress(10)
         
-        reviews, scraping_summary = scraper.scrape_reviews(weeks_back=weeks_back)
-        st.success(f"✅ Scraped {len(reviews)} reviews")
+        try:
+            reviews, scraping_summary = scraper.scrape_reviews(weeks_back=weeks_back)
+        except Exception as scrape_err:
+            st.error(f"❌ Phase 1 failed: {str(scrape_err)}")
+            progress_bar.progress(0)
+            status_text.text("")
+            return None, None
+        
+        if not reviews:
+            st.error("❌ Phase 1: No reviews scraped. Check internet connection or Play Store availability.")
+            progress_bar.progress(0)
+            status_text.text("")
+            return None, None
+        
+        st.success(f"✅ Phase 1: Scraped {len(reviews)} reviews")
         progress_bar.progress(25)
         
-        # PII Filtering
-        status_text.text("🔒 Filtering PII from reviews...")
+        # Phase 2: PII Filtering
+        status_text.text("🔒 Phase 2: Filtering PII from reviews...")
         pii_filter = PIIFilter()
         filtered_reviews, pii_summary = pii_filter.filter_reviews(reviews)
-        
+        st.success(f"✅ Phase 2: {len(filtered_reviews)} reviews after PII filtering")
         progress_bar.progress(35)
         
         # Phase 3: Theme Analysis
@@ -362,7 +376,7 @@ def run_analysis(weeks_back: int, recipient_email: str):
         
         analyzer = ThemeAnalyzer(groq_config)
         themes, metadata = analyzer.analyze_themes(filtered_reviews, max_themes=Config.MAX_THEMES)
-        st.success(f"✅ Identified {len(themes)} themes")
+        st.success(f"✅ Phase 3: Identified {len(themes)} themes")
         progress_bar.progress(60)
         
         # Phase 4: Report Generation
@@ -377,7 +391,7 @@ def run_analysis(weeks_back: int, recipient_email: str):
             date_range=(start_date, end_date),
             total_review_count=len(filtered_reviews)
         )
-        st.success("✅ Report generated")
+        st.success("✅ Phase 4: Report generated")
         progress_bar.progress(80)
         
         # Phase 5: Email Drafting + Sending

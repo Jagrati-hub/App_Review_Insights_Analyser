@@ -24,10 +24,10 @@ def get_config_value(key: str, default: str = '', streamlit_path: list = None):
         try:
             value = st.secrets
             for path_part in streamlit_path:
-                value = value.get(path_part, {})
-            if value and value != {}:
-                return value
-        except (AttributeError, FileNotFoundError):
+                value = value[path_part]
+            if value is not None and value != '':
+                return str(value)
+        except (KeyError, AttributeError, FileNotFoundError):
             pass
     
     # Fall back to environment variable
@@ -47,20 +47,20 @@ class Config:
     
     # Groq API settings
     GROQ_API_KEY = get_config_value('GROQ_API_KEY', '', ['groq', 'api_key'])
-    GROQ_MODEL = 'llama-3.3-70b-versatile'  # Updated to newer model
-    GROQ_TIMEOUT = 45  # Increased from 30 to 45 for better reliability
-    GROQ_MAX_RETRIES = 2  # Reduced from 3 to 2 retries
+    GROQ_MODEL = 'llama-3.3-70b-versatile'  # Fast model
+    GROQ_TIMEOUT = 30  # Reduced from 45 to 30 for faster processing
+    GROQ_MAX_RETRIES = 1  # Reduced from 2 to 1 for speed
     
-    # Scraper settings
+    # Scraper settings - Optimized for <1 minute processing
     APP_ID = os.getenv('APP_ID', 'com.nextbillion.groww')
     SCRAPER_LANGUAGE = 'en'
     SCRAPER_COUNTRY = 'us'
-    SCRAPER_BATCH_SIZE = 200
-    SCRAPER_DELAY = 0.5  # Reduced from 1.0 to 0.5 seconds between batches
-    SCRAPER_MAX_REVIEWS = 2000  # Reduced from 5000 to 2000 for faster processing
-    SCRAPER_MIN_WORD_COUNT = 5  # Phase 1: Filter reviews with <5 words
-    SCRAPER_FILTER_NON_ENGLISH = True  # Phase 1: Filter non-English reviews
-    SCRAPER_REMOVE_EMOJIS = True  # Phase 1: Remove emojis
+    SCRAPER_BATCH_SIZE = 100  # Reduced from 200 to 100
+    SCRAPER_DELAY = 0.2  # Reduced from 0.5 to 0.2 seconds
+    SCRAPER_MAX_REVIEWS = 500  # Reduced from 2000 to 500 for <1 min
+    SCRAPER_MIN_WORD_COUNT = 5
+    SCRAPER_FILTER_NON_ENGLISH = True
+    SCRAPER_REMOVE_EMOJIS = True
     
     # Analysis settings
     MIN_WEEKS = int(os.getenv('MIN_WEEKS', 8))

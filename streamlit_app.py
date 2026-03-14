@@ -473,31 +473,29 @@ def display_report(report):
     st.markdown("<p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 0.75rem 0;'>💡 Action Items</p>", unsafe_allow_html=True)
 
     for i, idea in enumerate(report.action_ideas, 1):
-        # Split on → and clean up each part, filter out empty/ellipsis-only parts
         raw_parts = [p.strip() for p in idea.split('→')]
-        parts = [p for p in raw_parts if p and p != '...' and p != '…']
+        parts = [p for p in raw_parts if p and p not in ('...', '…')]
         title = parts[0] if parts else idea
         steps = parts[1:] if len(parts) > 1 else []
 
-        steps_html = ''
-        for s in steps:
-            steps_html += f"""
-            <div style='display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.5rem;'>
-                <span style='color: #3b82f6; font-size: 0.85rem; margin-top: 1px; flex-shrink: 0;'>→</span>
-                <span style='color: #94a3b8; font-size: 0.85rem; line-height: 1.5;'>{s}</span>
+        card_html = f"""
+        <div style='background:#111827; border:1px solid #1e293b; border-left:3px solid #3b82f6;
+                    padding:1.25rem 1.5rem; margin:0.75rem 0; border-radius:10px;'>
+            <div style='display:flex; align-items:center; gap:0.75rem; margin-bottom:{"0.75rem" if steps else "0"};'>
+                <span style='background:#1e3a5f; color:#60a5fa; font-size:0.75rem; font-weight:700;
+                             padding:0.2rem 0.55rem; border-radius:5px;'>{i}</span>
+                <span style='color:#e2e8f0; font-size:0.95rem; font-weight:600;'>{title}</span>
             </div>"""
 
-        st.markdown(f"""
-        <div style='background: #111827; border: 1px solid #1e293b; border-left: 3px solid #3b82f6;
-                    padding: 1.25rem 1.5rem; margin: 0.75rem 0; border-radius: 10px;'>
-            <div style='display: flex; align-items: center; gap: 0.75rem; margin-bottom: {"0.6rem" if steps else "0"};'>
-                <span style='background: #1e3a5f; color: #60a5fa; font-size: 0.75rem; font-weight: 700;
-                             padding: 0.2rem 0.55rem; border-radius: 5px; flex-shrink: 0;'>{i}</span>
-                <p style='color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin: 0;'>{title}</p>
-            </div>
-            {steps_html}
-        </div>
-        """, unsafe_allow_html=True)
+        for step in steps:
+            card_html += f"""
+            <div style='display:flex; align-items:flex-start; gap:0.5rem; margin-top:0.5rem; padding-left:2.5rem;'>
+                <span style='color:#3b82f6; font-weight:700; flex-shrink:0;'>→</span>
+                <span style='color:#94a3b8; font-size:0.88rem; line-height:1.6;'>{step}</span>
+            </div>"""
+
+        card_html += "</div>"
+        st.markdown(card_html, unsafe_allow_html=True)
     
     st.markdown("---")
 

@@ -173,7 +173,7 @@ class EmailDrafter:
         
         # Action Ideas Section
         lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
-        lines.append("💡 ACTION ROADMAP")
+        lines.append("💡 ACTION ITEMS")
         lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         lines.append("")
         

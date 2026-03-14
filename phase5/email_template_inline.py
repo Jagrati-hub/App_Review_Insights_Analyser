@@ -102,63 +102,32 @@ def generate_html_email(report, sender_name, start_date, end_date):
 """
     
     html += """
-                            <!-- Action Roadmap Section -->
+                            <!-- Action Items Section -->
                             <h2 style="color: #1a202c; font-size: 22px; margin: 30px 0 20px 0; padding-bottom: 10px; border-bottom: 3px solid #e2e8f0;">
-                                <span style="font-size: 28px; margin-right: 8px;">💡</span> Action Roadmap
+                                <span style="font-size: 28px; margin-right: 8px;">💡</span> Action Items
                             </h2>
 """
     
     # Add action ideas
     for i, idea in enumerate(report.action_ideas, 1):
         parts = [p.strip() for p in idea.split('→')]
+        parts = [p for p in parts if p and p not in ('...', '…') and not p.endswith('...')]
         title = parts[0] if parts else idea
         steps = parts[1:] if len(parts) > 1 else []
         
         html += f"""
-                            <div style="background-color: #ffffff; border: 2px solid #e2e8f0; border-left: 5px solid #48bb78; padding: 20px; margin-bottom: 15px; border-radius: 4px;">
-                                <div style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #f7fafc;">
-                                    <span style="display: inline-block; background-color: #48bb78; color: white; width: 32px; height: 32px; border-radius: 8px; text-align: center; line-height: 32px; font-weight: bold; font-size: 16px; margin-right: 10px;">{i}</span>
-                                    <strong style="color: #1a202c; font-size: 16px;">{title}</strong>
+                            <div style="background-color: #ffffff; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; padding: 18px 20px; margin-bottom: 12px; border-radius: 6px;">
+                                <div style="display: flex; align-items: center; margin-bottom: {'10px' if steps else '0'};">
+                                    <span style="display: inline-block; background-color: #1e3a5f; color: #60a5fa; width: 28px; height: 28px; border-radius: 6px; text-align: center; line-height: 28px; font-weight: bold; font-size: 14px; margin-right: 12px; flex-shrink: 0;">{i}</span>
+                                    <strong style="color: #1a202c; font-size: 15px;">{title}</strong>
                                 </div>
 """
-        
-        if steps and len(steps) >= 2:
-            html += """
-                                <table role="presentation" width="100%" cellpadding="8" cellspacing="0" border="0">
-                                    <tr>
-"""
-            # First step
+        for step in steps:
             html += f"""
-                                        <td width="33%" style="background-color: #e6fffa; border: 2px solid #81e6d9; border-radius: 6px; padding: 10px; text-align: center;">
-                                            <div style="font-size: 9px; color: #2c7a7b; text-transform: uppercase; margin-bottom: 4px;">ACTION</div>
-                                            <div style="font-size: 13px; color: #2d3748;">{steps[0]}</div>
-                                        </td>
+                                <div style="padding-left: 40px; margin-top: 6px; color: #4a5568; font-size: 13px; line-height: 1.6;">
+                                    <span style="color: #3b82f6; font-weight: bold; margin-right: 6px;">→</span>{step}
+                                </div>
 """
-            # Middle steps
-            for j in range(1, len(steps) - 1):
-                html += f"""
-                                        <td width="33%" style="background-color: #f7fafc; border: 2px solid #e2e8f0; border-radius: 6px; padding: 10px; text-align: center;">
-                                            <div style="font-size: 9px; color: #718096; text-transform: uppercase; margin-bottom: 4px;">STEP {j}</div>
-                                            <div style="font-size: 13px; color: #2d3748;">{steps[j]}</div>
-                                        </td>
-"""
-            # Last step
-            html += f"""
-                                        <td width="33%" style="background-color: #c6f6d5; border: 2px solid #68d391; border-radius: 6px; padding: 10px; text-align: center;">
-                                            <div style="font-size: 9px; color: #22543d; text-transform: uppercase; margin-bottom: 4px;">OUTCOME</div>
-                                            <div style="font-size: 13px; color: #22543d; font-weight: 600;">{steps[-1]}</div>
-                                        </td>
-"""
-            html += """
-                                    </tr>
-                                </table>
-"""
-        elif steps:
-            for step in steps:
-                html += f"""
-                                <div style="padding-left: 42px; color: #4a5568; font-size: 14px; margin-bottom: 6px;">→ {step}</div>
-"""
-        
         html += """
                             </div>
 """

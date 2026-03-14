@@ -469,35 +469,45 @@ def display_report(report):
     
     st.markdown("---")
     
-    # Action Roadmap
-    st.markdown("<p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 0.75rem 0;'>💡 Action Roadmap</p>", unsafe_allow_html=True)
+    # Action Items
+    st.markdown("<p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 0.75rem 0;'>💡 Action Items</p>", unsafe_allow_html=True)
 
     for i, idea in enumerate(report.action_ideas, 1):
-        parts = [p.strip() for p in idea.split('→')]
+        # Split on → and clean up each part, filter out empty/ellipsis-only parts
+        raw_parts = [p.strip() for p in idea.split('→')]
+        parts = [p for p in raw_parts if p and p != '...' and p != '…']
         title = parts[0] if parts else idea
         steps = parts[1:] if len(parts) > 1 else []
 
-        steps_html = ''.join([
-            f"<span style='color: #475569; font-size: 0.82rem;'>→ {s}</span><br>"
-            for s in steps
-        ])
+        steps_html = ''
+        for s in steps:
+            steps_html += f"""
+            <div style='display: flex; align-items: flex-start; gap: 0.5rem; margin-top: 0.5rem;'>
+                <span style='color: #3b82f6; font-size: 0.85rem; margin-top: 1px; flex-shrink: 0;'>→</span>
+                <span style='color: #94a3b8; font-size: 0.85rem; line-height: 1.5;'>{s}</span>
+            </div>"""
 
         st.markdown(f"""
-        <div style='background: #111827; border: 1px solid #1e293b; padding: 1.25rem 1.5rem; margin: 0.75rem 0; border-radius: 10px; display: flex; gap: 1rem; align-items: flex-start;'>
-            <span style='background: #1e3a5f; color: #60a5fa; font-size: 0.78rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; min-width: 1.5rem; text-align: center;'>{i}</span>
-            <div>
-                <p style='color: #e2e8f0; font-size: 0.92rem; font-weight: 600; margin: 0 0 0.4rem 0;'>{title}</p>
-                {steps_html}
+        <div style='background: #111827; border: 1px solid #1e293b; border-left: 3px solid #3b82f6;
+                    padding: 1.25rem 1.5rem; margin: 0.75rem 0; border-radius: 10px;'>
+            <div style='display: flex; align-items: center; gap: 0.75rem; margin-bottom: {"0.6rem" if steps else "0"};'>
+                <span style='background: #1e3a5f; color: #60a5fa; font-size: 0.75rem; font-weight: 700;
+                             padding: 0.2rem 0.55rem; border-radius: 5px; flex-shrink: 0;'>{i}</span>
+                <p style='color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin: 0;'>{title}</p>
             </div>
+            {steps_html}
         </div>
         """, unsafe_allow_html=True)
     
     st.markdown("---")
 
-    # Footer
+    # Footer - timestamp in IST (UTC+5:30)
+    from datetime import timezone, timedelta as td
+    IST = timezone(td(hours=5, minutes=30))
+    generated_ist = report.generation_timestamp.astimezone(IST)
     st.markdown(f"""
     <div style='display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; margin-top: 0.5rem;'>
-        <span style='color: #334155; font-size: 0.78rem;'>📅 Generated {report.generation_timestamp.strftime('%b %d, %Y at %I:%M %p')}</span>
+        <span style='color: #334155; font-size: 0.78rem;'>📅 Generated {generated_ist.strftime('%b %d, %Y at %I:%M %p')} IST</span>
         <span style='background: #1e293b; color: #475569; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 6px;'>{report.word_count} words</span>
     </div>
     """, unsafe_allow_html=True)

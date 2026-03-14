@@ -380,14 +380,17 @@ def run_analysis(weeks_back: int, recipient_email: str):
         st.success("✅ Report generated")
         progress_bar.progress(80)
         
-        # Phase 5: Email Drafting
-        status_text.text("✉️ Phase 5: Creating email draft...")
-        drafter = EmailDrafter(send_email=False)  # Don't send in Streamlit
+        # Phase 5: Email Drafting + Sending
+        status_text.text("✉️ Phase 5: Sending email report...")
+        drafter = EmailDrafter(send_email=True)
         email_content, draft_metadata = drafter.draft_email(
             report=report,
             recipient=recipient_email
         )
-        st.success("✅ Email draft created")
+        if draft_metadata.email_sent:
+            st.success(f"✅ Email sent to {recipient_email}")
+        else:
+            st.warning("⚠️ Email draft created but could not be sent — check SMTP config")
         progress_bar.progress(100)
         
         status_text.text("✅ Analysis complete!")

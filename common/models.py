@@ -118,6 +118,7 @@ class DraftMetadata:
     timestamp: datetime
     output_path: str
     email_sent: bool = False  # Whether email was sent via SMTP
+    error_message: Optional[str] = None  # Error details if sending failed
 
 
 @dataclass

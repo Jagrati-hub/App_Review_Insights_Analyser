@@ -84,13 +84,15 @@ class EmailDrafter:
         
         # Send email if enabled (HTML only)
         email_sent = False
+        error_message = None
         if self.send_email:
             try:
                 self._send_email_html_only(recipient, subject, html_body)
                 email_sent = True
                 logger.info(f"✅ Email sent successfully to {recipient}")
             except Exception as e:
-                logger.error(f"❌ Failed to send email to {recipient}: {str(e)}")
+                error_message = str(e)
+                logger.error(f"❌ Failed to send email to {recipient}: {error_message}")
                 # Continue even if email fails - draft is still saved
         
         # Create metadata
@@ -98,7 +100,8 @@ class EmailDrafter:
             recipient=recipient,
             timestamp=datetime.now(),
             output_path=str(output_path),
-            email_sent=email_sent
+            email_sent=email_sent,
+            error_message=error_message
         )
         
         return email_content, metadata

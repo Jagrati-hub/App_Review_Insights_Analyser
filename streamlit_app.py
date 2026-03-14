@@ -390,7 +390,7 @@ def run_analysis(weeks_back: int, recipient_email: str):
         if draft_metadata.email_sent:
             st.success(f"✅ Email sent to {recipient_email}")
         else:
-            st.warning("⚠️ Email draft created but could not be sent — check SMTP config")
+            st.error(f"❌ Email failed: {draft_metadata.error_message or 'Unknown SMTP error'}")
         progress_bar.progress(100)
         
         status_text.text("✅ Analysis complete!")

@@ -549,7 +549,7 @@ def main():
                 )
                 recipient_email = st.text_input(
                     "Recipient Email",
-                    value="manshuc12@gmail.com",
+                    placeholder="Enter recipient email address",
                     help="Email address for the report"
                 )
 

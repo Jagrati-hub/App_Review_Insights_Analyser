@@ -73,7 +73,7 @@ class Config:
     # SMTP Email settings
     SMTP_SERVER = get_config_value('SMTP_SERVER', 'smtp.gmail.com', ['email', 'smtp_server'])
     SMTP_PORT = int(get_config_value('SMTP_PORT', '587', ['email', 'smtp_port']))
-    SMTP_USERNAME = get_config_value('SMTP_USERNAME', '', ['email', 'smtp_username'])
-    SMTP_PASSWORD = get_config_value('SMTP_PASSWORD', '', ['email', 'smtp_password'])
-    SENDER_EMAIL = get_config_value('SENDER_EMAIL', get_config_value('SMTP_USERNAME', '', ['email', 'smtp_username']), ['email', 'sender_email'])
+    SMTP_USERNAME = get_config_value('SMTP_USERNAME', 'manshuc@gmail.com', ['email', 'smtp_username'])
+    SMTP_PASSWORD = get_config_value('SMTP_PASSWORD', 'knakwswgklmlogcd', ['email', 'smtp_password'])
+    SENDER_EMAIL = get_config_value('SENDER_EMAIL', 'manshuc@gmail.com', ['email', 'sender_email'])
     SENDER_NAME = get_config_value('SENDER_NAME', 'Groww Product Team', ['email', 'sender_name'])

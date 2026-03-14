@@ -26,16 +26,12 @@ def _call_gemini_fallback(messages: list[dict], max_tokens: int = 2000) -> str:
     """Call Gemini API as fallback when Groq is rate limited."""
     try:
         import google.generativeai as genai
-        import os
-        from dotenv import load_dotenv
-        load_dotenv()
+        import sys, os
+        sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        from common.config import Config
 
-        # Try each Gemini key in order
-        gemini_keys = [k for k in [
-            os.getenv('Gemini_api_key_1', ''),
-            os.getenv('Gemini_api_key_2', ''),
-            os.getenv('Gemini_api_key_3', ''),
-        ] if k]
+        # Use Config which reads from Streamlit secrets or env vars
+        gemini_keys = Config.GEMINI_API_KEYS
 
         if not gemini_keys:
             raise Exception("No Gemini API keys configured")

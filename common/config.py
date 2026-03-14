@@ -71,9 +71,9 @@ class Config:
     
     # Gemini API keys (fallback when Groq is rate limited)
     GEMINI_API_KEYS = [k for k in [
-        os.getenv('Gemini_api_key_1', ''),
-        os.getenv('Gemini_api_key_2', ''),
-        os.getenv('Gemini_api_key_3', ''),
+        get_config_value('Gemini_api_key_1', '', ['gemini', 'api_key_1']),
+        get_config_value('Gemini_api_key_2', '', ['gemini', 'api_key_2']),
+        get_config_value('Gemini_api_key_3', '', ['gemini', 'api_key_3']),
     ] if k]
     GEMINI_MODEL = 'gemini-1.5-flash'
     MIN_WEEKS = int(os.getenv('MIN_WEEKS', 8))

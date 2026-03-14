@@ -212,31 +212,54 @@ class ReviewScraper:
     ) -> tuple[list[dict], Optional[str]]:
         """
         Fetch a batch of reviews from Play Store with retry logic.
+        Tries multiple country/language combos as fallback.
         
         Returns:
             - List of raw review dictionaries
             - Continuation token for next batch
         """
-        max_retries = 3
-        for attempt in range(max_retries):
-            try:
-                result, token = reviews(
-                    self.app_id,
-                    lang=self.language,
-                    country=self.country,
-                    sort=Sort.NEWEST,
-                    count=count,
-                    continuation_token=continuation_token
-                )
-                return result, token
-            
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    raise
-                wait_time = 2 ** attempt
-                logger.warning(f"Fetch attempt {attempt + 1} failed, retrying in {wait_time}s: {e}")
-                time.sleep(wait_time)
-        
+        # Try primary config first, then fallbacks
+        combos = [
+            (self.language, self.country),
+            ('en', 'in'),
+            ('en', 'us'),
+            ('en', 'gb'),
+        ]
+        # Deduplicate while preserving order
+        seen = set()
+        unique_combos = []
+        for c in combos:
+            if c not in seen:
+                seen.add(c)
+                unique_combos.append(c)
+
+        last_err = None
+        for lang, country in unique_combos:
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    result, token = reviews(
+                        self.app_id,
+                        lang=lang,
+                        country=country,
+                        sort=Sort.NEWEST,
+                        count=count,
+                        continuation_token=continuation_token
+                    )
+                    if result:
+                        return result, token
+                    # Empty result — try next combo
+                    break
+                except Exception as e:
+                    last_err = e
+                    if attempt == max_retries - 1:
+                        break
+                    wait_time = 2 ** attempt
+                    logger.warning(f"Fetch attempt {attempt + 1} failed ({lang}/{country}), retrying in {wait_time}s: {e}")
+                    time.sleep(wait_time)
+
+        if last_err:
+            raise last_err
         return [], None
     
     def _parse_review(self, raw_review: dict) -> Review:

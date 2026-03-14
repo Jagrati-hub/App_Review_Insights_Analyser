@@ -61,12 +61,12 @@ class Config:
     # Scraper settings - Optimized for <1 minute processing
     APP_ID = os.getenv('APP_ID', 'com.nextbillion.groww')
     SCRAPER_LANGUAGE = 'en'
-    SCRAPER_COUNTRY = 'us'
-    SCRAPER_BATCH_SIZE = 100  # Reduced from 200 to 100
-    SCRAPER_DELAY = 0.2  # Reduced from 0.5 to 0.2 seconds
+    SCRAPER_COUNTRY = 'in'  # India - Groww is an Indian app, more reviews available
+    SCRAPER_BATCH_SIZE = 100
+    SCRAPER_DELAY = 0.1  # Reduced delay
     SCRAPER_MAX_REVIEWS = 1000  # Increased to 1000 for better coverage
-    SCRAPER_MIN_WORD_COUNT = 5
-    SCRAPER_FILTER_NON_ENGLISH = True
+    SCRAPER_MIN_WORD_COUNT = 3  # Lowered from 5 to capture more reviews
+    SCRAPER_FILTER_NON_ENGLISH = False  # Disabled - Groww has many valid non-English reviews
     SCRAPER_REMOVE_EMOJIS = True
     
     # Gemini API keys (fallback when Groq is rate limited)

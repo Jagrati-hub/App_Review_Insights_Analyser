@@ -372,27 +372,22 @@ class ReportGenerator:
         themes_text = "\n".join(theme_summaries)
         
         # Create prompt for action idea generation
-        prompt = f"""Based on the following user feedback themes from Google Play Store reviews, generate exactly 3 specific, actionable roadmap items that the product team should consider implementing.
+        prompt = f"""Based on the following user feedback themes from Google Play Store reviews, generate exactly 3 specific, actionable items that the product team should implement.
 
 THEMES:
 {themes_text}
 
 REQUIREMENTS:
-- Each action should be formatted as a roadmap item with clear steps
-- Format: "Action Title → Step 1 → Step 2 → Expected Outcome"
-- Focus on addressing the most impactful themes
-- Keep each action concise but structured (max 25 words each)
-- Make them practical and realistic
-- Number them 1, 2, 3
+- Format each item as: "Action Title → Step 1 → Step 2 → Expected Outcome"
+- Every item MUST have all 4 parts separated by →
+- Each part must be a complete phrase (NO truncation, NO ellipsis)
+- Keep each full item under 40 words
+- Make them practical and specific to the themes
 
-EXAMPLE FORMAT:
-["Improve Onboarding → Simplify KYC flow → Add progress indicators → Reduce drop-off by 30%", "Fix Performance → Optimize API calls → Implement caching → Reduce load time to <2s", "Enhance Support → Add in-app chat → Train AI bot → Resolve 80% queries instantly"]
+EXAMPLE:
+["Improve Onboarding → Simplify KYC flow → Add progress indicators → Reduce drop-off by 30%", "Fix Performance → Optimize API calls → Implement caching → Reduce load time to under 2 seconds", "Enhance Support → Add in-app chat → Train AI bot → Resolve 80 percent of queries instantly"]
 
-FORMAT:
-Return ONLY a JSON array with 3 action roadmap items, like this:
-["Action roadmap 1", "Action roadmap 2", "Action roadmap 3"]
-
-Do not include any other text or explanation."""
+Return ONLY a valid JSON array with exactly 3 strings. No other text."""
         
         # Call Groq API with retry logic
         for attempt in range(self.max_retries):
@@ -410,7 +405,7 @@ Do not include any other text or explanation."""
                         }
                     ],
                     temperature=0.7,
-                    max_tokens=500,
+                    max_tokens=800,
                     timeout=self.timeout
                 )
                 

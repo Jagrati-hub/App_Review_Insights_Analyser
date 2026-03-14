@@ -474,7 +474,7 @@ def display_report(report):
 
     for i, idea in enumerate(report.action_ideas, 1):
         raw_parts = [p.strip() for p in idea.split('→')]
-        parts = [p for p in raw_parts if p and p not in ('...', '…')]
+        parts = [p for p in raw_parts if p and p not in ('...', '…') and not p.endswith('...')]
         title = parts[0] if parts else idea
         steps = parts[1:] if len(parts) > 1 else []
 

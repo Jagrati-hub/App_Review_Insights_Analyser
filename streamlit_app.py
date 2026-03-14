@@ -147,6 +147,34 @@ st.markdown("""
     .stSlider>div>div>div>div { background: #3b82f6 !important; }
     .stSlider>div>div>div { background: #1e293b !important; }
 
+    /* Slider value numbers - make them visible */
+    .stSlider [data-testid="stTickBarMin"],
+    .stSlider [data-testid="stTickBarMax"] {
+        color: #94a3b8 !important;
+        font-size: 0.82rem !important;
+        font-weight: 500 !important;
+    }
+    .stSlider [data-testid="stThumbValue"],
+    .stSlider output,
+    .stSlider div[data-testid="stSlider"] p,
+    .stSlider .st-emotion-cache-1dp5vir,
+    .stSlider span {
+        color: #f1f5f9 !important;
+        font-weight: 600 !important;
+        font-size: 0.9rem !important;
+    }
+    /* Current value bubble */
+    .stSlider [role="slider"] {
+        background: #3b82f6 !important;
+        border: 2px solid #60a5fa !important;
+    }
+    /* Tick/range labels */
+    .stSlider .st-emotion-cache-1inwz65,
+    .stSlider .st-emotion-cache-13ln4jf {
+        color: #94a3b8 !important;
+        font-size: 0.82rem !important;
+    }
+
     /* ── Metrics ── */
     [data-testid="stMetric"] {
         background: #111827;

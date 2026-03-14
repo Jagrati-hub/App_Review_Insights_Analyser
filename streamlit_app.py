@@ -30,399 +30,249 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for user-friendly theme
+# Modern dark SaaS theme CSS
 st.markdown("""
 <style>
-    /* User-Friendly Blue Gradient Theme */
-    .main {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-        color: #ffffff;
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    /* ── Base ── */
+    html, body, .stApp {
+        font-family: 'Inter', sans-serif !important;
+        background: #0a0f1e !important;
+        color: #e2e8f0 !important;
     }
-    
-    .stApp {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    .main { background: #0a0f1e !important; }
+    section[data-testid="stAppViewContainer"] { background: #0a0f1e !important; }
+    .main .block-container {
+        padding: 2rem 3rem !important;
+        max-width: 1200px;
+        background: transparent !important;
     }
-    
-    /* Header styling - Warm and inviting */
+
+    /* ── Transparent containers ── */
+    .element-container, .stMarkdown,
+    div[data-testid="stVerticalBlock"],
+    div[data-testid="stVerticalBlock"] > div,
+    div[data-testid="stHorizontalBlock"],
+    div[data-testid="column"],
+    .stApp > div,
+    .stApp > header + div { background: transparent !important; }
+
+    /* ── Hide sidebar ── */
+    [data-testid="stSidebar"] { display: none; }
+
+    /* ── Typography ── */
     h1 {
-        color: #ffffff !important;
+        color: #f8fafc !important;
+        font-size: 2.4rem !important;
         font-weight: 800 !important;
-        border-bottom: 4px solid #60a5fa;
-        padding-bottom: 1.2rem;
-        margin-bottom: 2rem;
-        font-size: 2.8rem !important;
-        letter-spacing: -0.5px;
-        text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        letter-spacing: -0.8px;
+        line-height: 1.2;
+        margin-bottom: 0.4rem !important;
+        padding-bottom: 0 !important;
+        border-bottom: none !important;
+        text-shadow: none !important;
     }
-    
     h2 {
-        color: #ffffff !important;
+        color: #f1f5f9 !important;
+        font-size: 1.5rem !important;
         font-weight: 700 !important;
-        margin-top: 2.5rem;
-        margin-bottom: 1.2rem;
-        font-size: 2rem !important;
-        letter-spacing: -0.3px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        letter-spacing: -0.4px;
+        margin-top: 2rem !important;
+        margin-bottom: 1rem !important;
+        text-shadow: none !important;
     }
-    
     h3 {
-        color: #60a5fa !important;
-        font-weight: 700 !important;
-        font-size: 1.4rem !important;
+        color: #93c5fd !important;
+        font-size: 1.1rem !important;
+        font-weight: 600 !important;
         letter-spacing: -0.2px;
     }
-    
-    /* Text colors - White for readability on purple */
-    p, span, div, label {
-        color: #ffffff !important;
-        font-weight: 500 !important;
-    }
-    
-    /* Stronger text for better readability */
-    .stMarkdown, .stText {
-        color: #ffffff !important;
-        font-weight: 500 !important;
-    }
-    
-    /* List items - White and prominent */
-    li {
-        color: #ffffff !important;
-        font-weight: 500 !important;
-        line-height: 1.8 !important;
-    }
-    
-    /* Button styling - Blue/Cyan rounded buttons */
+    h4 { color: #93c5fd !important; font-weight: 600 !important; }
+    p, span, div, label { color: #cbd5e1 !important; font-weight: 400 !important; }
+    li { color: #94a3b8 !important; line-height: 1.8 !important; }
+    .stMarkdown, .stText { color: #cbd5e1 !important; }
+
+    /* ── Dividers ── */
+    hr { border: none; border-top: 1px solid #1e293b; margin: 2rem 0; }
+
+    /* ── Buttons ── */
     .stButton>button {
-        background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%) !important;
+        background: #2563eb !important;
         color: #ffffff !important;
         border: none !important;
-        padding: 1rem 2.5rem !important;
-        font-size: 1.1rem !important;
-        font-weight: 700 !important;
-        border-radius: 25px !important;
+        padding: 0.75rem 2rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
         width: 100%;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
-        transition: all 0.3s ease;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        transition: all 0.2s ease;
+        text-transform: none !important;
     }
-    
     .stButton>button:hover {
-        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%) !important;
-        box-shadow: 0 10px 25px rgba(6, 182, 212, 0.5);
-        transform: translateY(-3px);
+        background: #1d4ed8 !important;
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+        transform: translateY(-1px);
     }
-    
-    /* Input fields - Glass morphism effect */
+
+    /* ── Inputs ── */
     .stTextInput>div>div>input,
     .stNumberInput>div>div>input,
     .stSelectbox>div>div>select {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: #ffffff !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        border-radius: 15px !important;
-        font-weight: 500 !important;
-        font-size: 1rem !important;
-        padding: 0.5rem !important;
-        backdrop-filter: blur(10px);
+        background: #111827 !important;
+        color: #f1f5f9 !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+        font-weight: 400 !important;
     }
-    
     .stTextInput>div>div>input:focus,
-    .stNumberInput>div>div>input:focus,
-    .stSelectbox>div>div>select:focus {
-        border-color: #60a5fa !important;
-        box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.3) !important;
+    .stNumberInput>div>div>input:focus {
+        border-color: #3b82f6 !important;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
     }
-    
-    /* Input labels - White and prominent */
-    .stTextInput>label,
-    .stNumberInput>label,
-    .stSelectbox>label,
-    .stSlider>label {
-        color: #ffffff !important;
-        font-weight: 700 !important;
-        font-size: 1rem !important;
-        margin-bottom: 0.5rem !important;
-        letter-spacing: 0.3px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    .stTextInput>label, .stNumberInput>label,
+    .stSelectbox>label, .stSlider>label {
+        color: #94a3b8 !important;
+        font-size: 0.85rem !important;
+        font-weight: 500 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        text-shadow: none !important;
     }
-    
-    /* Slider - Blue accent */
-    .stSlider>div>div>div>div {
-        background: #60a5fa !important;
+
+    /* ── Slider ── */
+    .stSlider>div>div>div>div { background: #3b82f6 !important; }
+    .stSlider>div>div>div { background: #1e293b !important; }
+
+    /* ── Metrics ── */
+    [data-testid="stMetric"] {
+        background: #111827;
+        border: 1px solid #1e293b;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        transition: border-color 0.2s;
     }
-    
-    .stSlider>div>div>div {
-        background: rgba(255, 255, 255, 0.3) !important;
-    }
-    
-    /* Metrics - Colorful and appealing */
+    [data-testid="stMetric"]:hover { border-color: #3b82f6; }
     [data-testid="stMetricValue"] {
         color: #60a5fa !important;
-        font-size: 2.5rem !important;
-        font-weight: 800 !important;
-        text-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        text-shadow: none !important;
     }
-    
     [data-testid="stMetricLabel"] {
-        color: #ffffff !important;
-        font-weight: 700 !important;
+        color: #64748b !important;
+        font-size: 0.78rem !important;
+        font-weight: 500 !important;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        font-size: 0.9rem !important;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        letter-spacing: 0.8px;
+        text-shadow: none !important;
     }
-    
-    /* Metric container styling - Glass morphism */
-    [data-testid="stMetric"] {
-        background: rgba(255, 255, 255, 0.15);
-        padding: 1.5rem;
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+
+    /* ── Alerts / Info / Success / Error ── */
+    .stAlert, .stInfo, .stSuccess, .stError, .stWarning {
+        border-radius: 10px !important;
+        backdrop-filter: none !important;
     }
-    
-    /* Cards/Containers - Glass morphism */
-    .stAlert {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        border-radius: 20px !important;
-        color: #ffffff !important;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
+    .stInfo {
+        background: #0f172a !important;
+        border: 1px solid #1e3a5f !important;
+        border-left: 3px solid #3b82f6 !important;
     }
-    
-    /* Expander - Glass morphism styling */
+    .stInfo p, .stInfo div, .stInfo span, .stInfo li { color: #93c5fd !important; }
+    .stSuccess {
+        background: #052e16 !important;
+        border: 1px solid #14532d !important;
+        border-left: 3px solid #22c55e !important;
+    }
+    .stSuccess p, .stSuccess div, .stSuccess span { color: #86efac !important; }
+    .stError {
+        background: #1c0a0a !important;
+        border: 1px solid #450a0a !important;
+        border-left: 3px solid #ef4444 !important;
+    }
+    .stError p, .stError div, .stError span { color: #fca5a5 !important; }
+
+    /* ── Expanders ── */
     .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        color: #ffffff !important;
-        font-weight: 700 !important;
-        border-radius: 20px !important;
-        font-size: 1.1rem !important;
-        padding: 1.2rem 1.5rem !important;
-        margin: 0.5rem 0 !important;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-        transition: all 0.2s ease;
+        background: #111827 !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 10px !important;
+        color: #e2e8f0 !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+        padding: 1rem 1.25rem !important;
+        transition: border-color 0.2s, background 0.2s;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
     }
-    
     .streamlit-expanderHeader:hover {
-        border-color: #60a5fa !important;
-        box-shadow: 0 10px 40px rgba(96, 165, 250, 0.3);
+        border-color: #3b82f6 !important;
+        background: #0f172a !important;
+        box-shadow: none !important;
     }
-    
     .streamlit-expanderContent {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 2px solid rgba(255, 255, 255, 0.2) !important;
+        background: #0d1424 !important;
+        border: 1px solid #1e293b !important;
         border-top: none !important;
-        border-radius: 0 0 20px 20px !important;
-        color: #ffffff !important;
-        padding: 1.5rem !important;
-        backdrop-filter: blur(10px);
+        border-radius: 0 0 10px 10px !important;
+        padding: 1.25rem !important;
+        backdrop-filter: none !important;
     }
-    
     .streamlit-expanderContent p,
     .streamlit-expanderContent div,
     .streamlit-expanderContent span {
-        color: #ffffff !important;
-        font-size: 1.05rem !important;
-        line-height: 1.8 !important;
-        font-weight: 500 !important;
+        color: #94a3b8 !important;
+        font-size: 0.95rem !important;
+        line-height: 1.75 !important;
     }
-    
-    /* Progress bar - Blue gradient */
+
+    /* ── Progress bar ── */
     .stProgress>div>div>div>div {
-        background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%) !important;
+        background: linear-gradient(90deg, #2563eb, #38bdf8) !important;
+        border-radius: 4px;
     }
-    
-    .stProgress>div>div>div {
-        background: rgba(255, 255, 255, 0.3) !important;
-    }
-    
-    /* Info boxes - Glass morphism styling */
-    .stInfo {
-        background: rgba(255, 255, 255, 0.2) !important;
-        border-left: 4px solid #60a5fa !important;
-        border-radius: 20px !important;
-        color: #ffffff !important;
-        padding: 1.5rem !important;
-        margin: 1rem 0 !important;
-        backdrop-filter: blur(10px);
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stInfo p, .stInfo div, .stInfo span, .stInfo li {
-        color: #ffffff !important;
-        line-height: 1.7 !important;
-    }
-    
-    .stSuccess {
-        background: rgba(16, 185, 129, 0.2) !important;
-        border-left: 4px solid #10b981 !important;
-        border-radius: 20px !important;
-        color: #ffffff !important;
-        padding: 1rem !important;
-        margin: 0.5rem 0 !important;
-        backdrop-filter: blur(10px);
-    }
-    
-    .stSuccess p, .stSuccess div, .stSuccess span {
-        color: #ffffff !important;
-    }
-    
-    .stError {
-        background: rgba(239, 68, 68, 0.2) !important;
-        border-left: 4px solid #ef4444 !important;
-        border-radius: 20px !important;
-        color: #ffffff !important;
-        padding: 1rem !important;
-        margin: 0.5rem 0 !important;
-        backdrop-filter: blur(10px);
-    }
-    
-    .stError p, .stError div, .stError span {
-        color: #ffffff !important;
-    }
-    
-    /* Text area - Glass morphism */
+    .stProgress>div>div>div { background: #1e293b !important; border-radius: 4px; }
+
+    /* ── Text area ── */
     .stTextArea>div>div>textarea {
-        background: rgba(255, 255, 255, 0.15) !important;
-        color: #ffffff !important;
-        border: 2px solid rgba(255, 255, 255, 0.3) !important;
-        font-family: 'Courier New', monospace !important;
-        border-radius: 15px !important;
-        backdrop-filter: blur(10px);
+        background: #111827 !important;
+        color: #e2e8f0 !important;
+        border: 1px solid #1e293b !important;
+        border-radius: 8px !important;
+        font-family: 'JetBrains Mono', 'Courier New', monospace !important;
+        font-size: 0.85rem !important;
+        backdrop-filter: none !important;
     }
-    
-    /* Download button - Cyan accent */
+
+    /* ── Download button ── */
     .stDownloadButton>button {
-        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%) !important;
+        background: #0f766e !important;
         color: #ffffff !important;
         border: none !important;
         font-weight: 600 !important;
-        border-radius: 20px !important;
-        padding: 0.75rem 1.5rem !important;
-        box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
+        border-radius: 8px !important;
+        padding: 0.6rem 1.25rem !important;
+        box-shadow: 0 4px 12px rgba(15, 118, 110, 0.3);
     }
-    
-    /* Configuration section - Glass morphism card */
-    .config-section {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 2rem;
-        margin: 2rem 0;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border-radius: 25px;
-        backdrop-filter: blur(10px);
-    }
-    
-    .config-section p,
-    .config-section div,
-    .config-section span,
-    .config-section label {
-        color: #ffffff !important;
-    }
-    
-    /* Content containers - Glass morphism */
-    .content-box {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-radius: 20px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(10px);
-    }
-    
-    /* Section dividers */
-    hr {
-        border: none;
-        border-top: 2px solid rgba(255, 255, 255, 0.3);
-        margin: 2.5rem 0;
-    }
-    
-    /* Hide sidebar */
-    [data-testid="stSidebar"] {
-        display: none;
-    }
-    
-    /* Caption text */
-    .stCaption {
-        color: rgba(255, 255, 255, 0.8) !important;
-        font-size: 0.875rem !important;
-    }
-    
-    /* Ensure subheaders are visible and prominent */
+
+    /* ── Caption ── */
+    .stCaption { color: #475569 !important; font-size: 0.8rem !important; }
+
+    /* ── Subheader ── */
     .stSubheader {
-        color: #ffffff !important;
-        font-size: 1.5rem !important;
+        color: #f1f5f9 !important;
+        font-size: 1.2rem !important;
         font-weight: 700 !important;
         letter-spacing: -0.3px;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        text-shadow: none !important;
     }
-    
-    /* Help text */
-    .stHelp {
-        color: rgba(255, 255, 255, 0.8) !important;
-    }
-    
-    /* Professional spacing */
-    .block-container {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-    }
-    
-    /* Hide default Streamlit containers */
-    .element-container {
-        background: transparent !important;
-    }
-    
-    /* Remove default Streamlit padding/margins that create blank spaces */
-    .stMarkdown {
-        background: transparent !important;
-    }
-    
-    /* Fix any blank containers */
-    div[data-testid="stVerticalBlock"] > div {
-        background: transparent !important;
-    }
-    
-    /* Remove any default white boxes */
-    .stApp > div {
-        background: transparent !important;
-    }
-    
-    /* Ensure main content area has no extra containers */
-    section[data-testid="stAppViewContainer"] {
-        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
-    }
-    
-    /* Remove any extra padding from columns */
-    div[data-testid="column"] {
-        background: transparent !important;
-    }
-    
-    /* Target the specific container that might be showing as off-white */
-    .stApp > header + div {
-        background: transparent !important;
-    }
-    
-    /* Remove background from all vertical blocks */
-    div[data-testid="stVerticalBlock"] {
-        background: transparent !important;
-    }
-    
-    /* Ensure horizontal blocks are transparent */
-    div[data-testid="stHorizontalBlock"] {
-        background: transparent !important;
-    }
-    
-    /* Fix container backgrounds */
-    .main .block-container {
-        background: transparent !important;
-    }
+
+    /* ── Spacing ── */
+    .block-container { padding-top: 1.5rem; padding-bottom: 2rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -533,13 +383,16 @@ def display_report(report):
     if not report:
         return
     
-    # Header with professional styling
+    # Header with modern styling
     st.markdown("---")
-    st.header("📊 Weekly Pulse Report")
-    
-    start_date = report.date_range[0].strftime("%B %d")
-    end_date = report.date_range[1].strftime("%B %d, %Y")
-    st.markdown(f"<p style='color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; margin-bottom: 2rem;'>{start_date} to {end_date}</p>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem;'>
+        <h2 style='margin: 0; color: #f1f5f9; font-size: 1.4rem; font-weight: 700;'>📊 Weekly Pulse Report</h2>
+        <span style='background: #1e293b; color: #64748b; font-size: 0.78rem; padding: 0.3rem 0.75rem; border-radius: 20px; border: 1px solid #334155;'>
+            {report.date_range[0].strftime("%b %d")} – {report.date_range[1].strftime("%b %d, %Y")}
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Statistics with professional cards
     st.markdown("<div style='margin: 2rem 0;'>", unsafe_allow_html=True)
@@ -564,8 +417,7 @@ def display_report(report):
     st.markdown("---")
     
     # Top Themes
-    st.subheader("📊 Top Themes")
-    st.markdown("<p style='color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem;'>Key insights from user feedback</p>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 0.75rem 0;'>📌 Top Themes</p>", unsafe_allow_html=True)
     
     for i, theme in enumerate(report.themes, 1):
         freq = getattr(theme, 'actual_frequency', theme.frequency)
@@ -578,97 +430,114 @@ def display_report(report):
     st.markdown("---")
     
     # User Voices
-    st.subheader("💬 User Voices")
-    st.markdown("<p style='color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem;'>Representative feedback from users</p>", unsafe_allow_html=True)
-    
+    st.markdown("<p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 0.75rem 0;'>💬 User Voices</p>", unsafe_allow_html=True)
+
     for i, quote in enumerate(report.quotes, 1):
         st.markdown(f"""
-        <div style='background: rgba(255, 255, 255, 0.15); border-left: 4px solid #60a5fa; padding: 1.5rem; margin: 1rem 0; border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);'>
-            <p style='color: #ffffff; font-size: 1.05rem; line-height: 1.7; margin: 0; font-style: italic;'>"{quote}"</p>
+        <div style='background: #111827; border: 1px solid #1e293b; border-left: 3px solid #3b82f6; padding: 1.25rem 1.5rem; margin: 0.75rem 0; border-radius: 10px;'>
+            <p style='color: #94a3b8; font-size: 0.9rem; line-height: 1.75; margin: 0; font-style: italic;'>"{quote}"</p>
         </div>
         """, unsafe_allow_html=True)
     
     st.markdown("---")
     
     # Action Roadmap
-    st.subheader("💡 Action Roadmap")
-    st.markdown("<p style='color: rgba(255, 255, 255, 0.9); margin-bottom: 1rem;'>Recommended next steps</p>", unsafe_allow_html=True)
-    
+    st.markdown("<p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 1.5rem 0 0.75rem 0;'>💡 Action Roadmap</p>", unsafe_allow_html=True)
+
     for i, idea in enumerate(report.action_ideas, 1):
         parts = [p.strip() for p in idea.split('→')]
         title = parts[0] if parts else idea
         steps = parts[1:] if len(parts) > 1 else []
-        
+
+        steps_html = ''.join([
+            f"<span style='color: #475569; font-size: 0.82rem;'>→ {s}</span><br>"
+            for s in steps
+        ])
+
         st.markdown(f"""
-        <div style='background: rgba(255, 255, 255, 0.15); border: 1px solid rgba(255, 255, 255, 0.3); padding: 1.5rem; margin: 1rem 0; border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px);'>
-            <h4 style='color: #60a5fa; margin: 0 0 1rem 0; font-weight: 600;'>{i}. {title}</h4>
+        <div style='background: #111827; border: 1px solid #1e293b; padding: 1.25rem 1.5rem; margin: 0.75rem 0; border-radius: 10px; display: flex; gap: 1rem; align-items: flex-start;'>
+            <span style='background: #1e3a5f; color: #60a5fa; font-size: 0.78rem; font-weight: 700; padding: 0.25rem 0.6rem; border-radius: 6px; min-width: 1.5rem; text-align: center;'>{i}</span>
+            <div>
+                <p style='color: #e2e8f0; font-size: 0.92rem; font-weight: 600; margin: 0 0 0.4rem 0;'>{title}</p>
+                {steps_html}
+            </div>
+        </div>
         """, unsafe_allow_html=True)
-        
-        if steps:
-            for j, step in enumerate(steps, 1):
-                st.markdown(f"<p style='color: #ffffff; margin: 0.5rem 0 0.5rem 1.5rem; line-height: 1.6;'>→ {step}</p>", unsafe_allow_html=True)
-        
-        st.markdown("</div>", unsafe_allow_html=True)
     
     st.markdown("---")
-    
+
     # Footer
-    st.markdown("""
-    <div style='margin-top: 2rem; padding: 1.5rem; background: rgba(255, 255, 255, 0.15); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);'>
+    st.markdown(f"""
+    <div style='display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; margin-top: 0.5rem;'>
+        <span style='color: #334155; font-size: 0.78rem;'>📅 Generated {report.generation_timestamp.strftime('%b %d, %Y at %I:%M %p')}</span>
+        <span style='background: #1e293b; color: #475569; font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 6px;'>{report.word_count} words</span>
+    </div>
     """, unsafe_allow_html=True)
-    st.caption(f"📅 Generated: {report.generation_timestamp.strftime('%B %d, %Y at %I:%M %p')}")
-    st.caption(f"📝 Word count: {report.word_count}")
-    st.markdown("</div>", unsafe_allow_html=True)
 
 def main():
     """Main Streamlit app"""
     
-    # Main content
-    st.title("📊 Play Store Review Analyzer")
-    st.markdown("<p style='color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; margin-bottom: 2rem;'>Automated analysis of Google Play Store reviews for the Groww app</p>", unsafe_allow_html=True)
+    # ── Hero header ──
+    st.markdown("""
+    <div style='padding: 2rem 0 1.5rem 0; border-bottom: 1px solid #1e293b; margin-bottom: 2rem;'>
+        <div style='display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;'>
+            <span style='font-size: 1.8rem;'>📊</span>
+            <h1 style='margin: 0; font-size: 1.9rem; font-weight: 800; color: #f8fafc;'>Play Store Review Analyzer</h1>
+        </div>
+        <p style='color: #64748b; font-size: 0.95rem; margin: 0; font-weight: 400;'>
+            AI-powered analysis of Google Play Store reviews &nbsp;·&nbsp; Groww App &nbsp;·&nbsp;
+            <span style='color: #3b82f6;'>● Live</span>
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Configuration section at the top
     if not st.session_state.analysis_complete:
-        # Use a container with custom styling
         with st.container():
             st.markdown("""
-            <style>
-            .config-container {
-                background: #ffffff;
-                border: 1px solid #e2e8f0;
-                padding: 2rem;
-                margin: 2rem 0;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-                border-radius: 16px;
-            }
-            </style>
+            <div style='background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 1.75rem 2rem; margin-bottom: 1.5rem;'>
+                <p style='color: #64748b; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; margin: 0 0 1rem 0;'>⚙️ Configuration</p>
+            </div>
             """, unsafe_allow_html=True)
-            
-            st.subheader("⚙️ Configuration")
-            
+
             col1, col2 = st.columns([2, 1])
-            
+
             with col1:
                 weeks_back = st.slider(
                     "Weeks to analyze",
-                    min_value=8,
-                    max_value=12,
-                    value=10,
+                    min_value=8, max_value=12, value=10,
                     help="Number of weeks of reviews to analyze"
                 )
-                
                 recipient_email = st.text_input(
                     "Recipient Email",
                     value="manshuc12@gmail.com",
                     help="Email address for the report"
                 )
-            
+
             with col2:
-                st.markdown("**System Configuration**")
-                st.markdown(f"<p style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin: 0.25rem 0;'>Model: {Config.GROQ_MODEL}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin: 0.25rem 0;'>Max Reviews: {Config.SCRAPER_MAX_REVIEWS:,}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin: 0.25rem 0;'>Max Themes: {Config.MAX_THEMES}</p>", unsafe_allow_html=True)
-                st.markdown(f"<p style='color: rgba(255, 255, 255, 0.9); font-size: 0.9rem; margin: 0.25rem 0;'>Word Limit: {Config.REPORT_WORD_LIMIT}</p>", unsafe_allow_html=True)
+                st.markdown(f"""
+                <div style='background: #0a0f1e; border: 1px solid #1e293b; border-radius: 10px; padding: 1.25rem; margin-top: 0.5rem;'>
+                    <p style='color: #475569; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; margin: 0 0 0.75rem 0;'>System Info</p>
+                    <div style='display: flex; flex-direction: column; gap: 0.5rem;'>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <span style='color: #475569; font-size: 0.82rem;'>Model</span>
+                            <span style='color: #93c5fd; font-size: 0.82rem; font-weight: 500;'>{Config.GROQ_MODEL.split('-')[0]}</span>
+                        </div>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <span style='color: #475569; font-size: 0.82rem;'>Max Reviews</span>
+                            <span style='color: #93c5fd; font-size: 0.82rem; font-weight: 500;'>{Config.SCRAPER_MAX_REVIEWS:,}</span>
+                        </div>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <span style='color: #475569; font-size: 0.82rem;'>Max Themes</span>
+                            <span style='color: #93c5fd; font-size: 0.82rem; font-weight: 500;'>{Config.MAX_THEMES}</span>
+                        </div>
+                        <div style='display: flex; justify-content: space-between;'>
+                            <span style='color: #475569; font-size: 0.82rem;'>Word Limit</span>
+                            <span style='color: #93c5fd; font-size: 0.82rem; font-weight: 500;'>{Config.REPORT_WORD_LIMIT}</span>
+                        </div>
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
         
         # Start button (outside container to avoid spacing issues)
         st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
@@ -704,55 +573,46 @@ def main():
                 )
     else:
         # Welcome message
-        st.info("""
-        ⚙️ Configure your analysis settings above and click **START ANALYSIS** to begin.
-        
-        **What this does:**
-        • Scrapes reviews from Google Play Store (Groww app)
-        • Filters non-English reviews and removes PII
-        • Analyzes themes using Groq LLM
-        • Generates a 250-word pulse report
-        • Creates an email draft
-        
-        **Processing time:** ~45-60 seconds
-        """)
-        
-        # Feature highlights
+        st.markdown("""
+        <div style='background: #0f172a; border: 1px solid #1e3a5f; border-left: 3px solid #3b82f6; border-radius: 10px; padding: 1.25rem 1.5rem; margin: 1rem 0;'>
+            <p style='color: #93c5fd; font-size: 0.9rem; margin: 0 0 0.75rem 0; font-weight: 600;'>⚙️ Ready to analyze</p>
+            <p style='color: #64748b; font-size: 0.85rem; margin: 0 0 0.5rem 0;'>Configure settings above and click <strong style='color: #93c5fd;'>Run Analysis</strong> to begin.</p>
+            <div style='display: flex; gap: 1.5rem; margin-top: 0.75rem; flex-wrap: wrap;'>
+                <span style='color: #475569; font-size: 0.8rem;'>📥 Scrapes Play Store reviews</span>
+                <span style='color: #475569; font-size: 0.8rem;'>🔒 PII filtering</span>
+                <span style='color: #475569; font-size: 0.8rem;'>🤖 Groq LLM analysis</span>
+                <span style='color: #475569; font-size: 0.8rem;'>⏱ ~45–60 seconds</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # Feature cards
         col1, col2, col3 = st.columns(3)
-        
+
         with col1:
             st.markdown("""
-            <div style='background: rgba(255, 255, 255, 0.15); padding: 1.5rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); height: 100%;'>
-            <h3 style='color: #60a5fa !important; margin-bottom: 1rem;'>🔍 Smart Analysis</h3>
-            <ul style='color: #ffffff; line-height: 1.7;'>
-            <li>AI-powered theme detection</li>
-            <li>Sentiment analysis</li>
-            <li>Trend identification</li>
-            </ul>
+            <div style='background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; margin-top: 1rem; transition: border-color 0.2s;'>
+                <div style='font-size: 1.5rem; margin-bottom: 0.75rem;'>🔍</div>
+                <p style='color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.5rem 0;'>Smart Analysis</p>
+                <p style='color: #475569; font-size: 0.82rem; margin: 0; line-height: 1.6;'>AI-powered theme detection, sentiment analysis, and trend identification.</p>
             </div>
             """, unsafe_allow_html=True)
-        
+
         with col2:
             st.markdown("""
-            <div style='background: rgba(255, 255, 255, 0.15); padding: 1.5rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); height: 100%;'>
-            <h3 style='color: #60a5fa !important; margin-bottom: 1rem;'>📊 Comprehensive Reports</h3>
-            <ul style='color: #ffffff; line-height: 1.7;'>
-            <li>Top 3 themes</li>
-            <li>User quotes</li>
-            <li>Action recommendations</li>
-            </ul>
+            <div style='background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; margin-top: 1rem;'>
+                <div style='font-size: 1.5rem; margin-bottom: 0.75rem;'>📊</div>
+                <p style='color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.5rem 0;'>Pulse Reports</p>
+                <p style='color: #475569; font-size: 0.82rem; margin: 0; line-height: 1.6;'>Top themes, user quotes, and actionable product recommendations.</p>
             </div>
             """, unsafe_allow_html=True)
-        
+
         with col3:
             st.markdown("""
-            <div style='background: rgba(255, 255, 255, 0.15); padding: 1.5rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); backdrop-filter: blur(10px); height: 100%;'>
-            <h3 style='color: #60a5fa !important; margin-bottom: 1rem;'>✉️ Email Ready</h3>
-            <ul style='color: #ffffff; line-height: 1.7;'>
-            <li>Professional formatting</li>
-            <li>Statistics included</li>
-            <li>Ready to send</li>
-            </ul>
+            <div style='background: #111827; border: 1px solid #1e293b; border-radius: 12px; padding: 1.5rem; margin-top: 1rem;'>
+                <div style='font-size: 1.5rem; margin-bottom: 0.75rem;'>✉️</div>
+                <p style='color: #e2e8f0; font-size: 0.95rem; font-weight: 600; margin: 0 0 0.5rem 0;'>Email Ready</p>
+                <p style='color: #475569; font-size: 0.82rem; margin: 0; line-height: 1.6;'>Professionally formatted email draft, ready to send to stakeholders.</p>
             </div>
             """, unsafe_allow_html=True)
 

@@ -58,6 +58,13 @@ jobs:
       - name: Run pulse report generation
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GROQ_API_KEY_2: ${{ secrets.GROQ_API_KEY_2 }}
+          Gemini_api_key_1: ${{ secrets.GEMINI_API_KEY_1 }}
+          Gemini_api_key_2: ${{ secrets.GEMINI_API_KEY_2 }}
+          Gemini_api_key_3: ${{ secrets.GEMINI_API_KEY_3 }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SENDER_EMAIL: ${{ secrets.SMTP_USERNAME }}
           RECIPIENT_EMAIL: ${{ github.event.inputs.recipient_email }}
           WEEKS_BACK: ${{ github.event.inputs.weeks_back }}
         run: |

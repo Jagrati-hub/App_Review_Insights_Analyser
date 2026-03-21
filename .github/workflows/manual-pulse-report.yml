@@ -54,7 +54,17 @@ jobs:
           echo "  Weeks back: ${{ github.event.inputs.weeks_back }}"
           echo "  Recipient: ${{ github.event.inputs.recipient_email }}"
           echo "  Commit results: ${{ github.event.inputs.commit_results }}"
-      
+
+      - name: Validate required secrets
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          if [ -z "$GROQ_API_KEY" ]; then
+            echo "::error::GROQ_API_KEY secret is not set. Go to repo Settings → Secrets and variables → Actions → New repository secret and add GROQ_API_KEY."
+            exit 1
+          fi
+          echo "✅ GROQ_API_KEY is set"
+
       - name: Run pulse report generation
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

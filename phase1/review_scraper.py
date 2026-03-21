@@ -2,8 +2,6 @@
 import logging
 import time
 import re
-import xml.etree.ElementTree as ET
-import urllib.request
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from google_play_scraper import reviews, Sort
@@ -280,112 +278,95 @@ class ReviewScraper:
 
     def _fetch_reviews_rss(self, count: int = 200) -> list[dict]:
         """
-        Fallback: fetch reviews via Google Play RSS feed.
-        Works on Streamlit Cloud where google-play-scraper may be blocked.
-        Returns up to 200 reviews (RSS feed limit per page).
+        Fallback: replicate google-play-scraper's HTTP call directly using requests.
+        Uses browser User-Agent and session to bypass IP restrictions on Streamlit Cloud.
         """
-        all_results = []
-        # RSS feed supports pages 1-10, 200 reviews each
-        max_pages = min(5, (count // 200) + 1)
-
-        for page in range(1, max_pages + 1):
-            url = (
-                f"https://play.google.com/store/apps/details"
-                f"?id={self.app_id}&hl=en&gl=in"
-            )
-            # Use the public RSS endpoint
-            rss_url = (
-                f"https://play.google.com/store/apps/details"
-                f"?id={self.app_id}&reviewPage={page}&hl=en&gl=in"
-            )
-            # Actual RSS URL format
-            rss_url = f"https://play.google.com/store/getreviews?id={self.app_id}&reviewType=0&pageNum={page}&hl=en"
-
-            try:
-                req = urllib.request.Request(
-                    rss_url,
-                    headers={
-                        'User-Agent': 'Mozilla/5.0 (compatible; ReviewScraper/1.0)',
-                        'Accept': 'application/atom+xml,application/xml,text/xml,*/*',
-                    }
-                )
-                with urllib.request.urlopen(req, timeout=15) as resp:
-                    raw = resp.read().decode('utf-8', errors='replace')
-
-                results = self._parse_rss_reviews(raw)
-                if not results:
-                    break
-                all_results.extend(results)
-                logger.info(f"RSS page {page}: got {len(results)} reviews")
-
-                if len(all_results) >= count:
-                    break
-                time.sleep(0.5)
-
-            except Exception as e:
-                logger.warning(f"RSS page {page} failed: {e}")
-                break
-
-        return all_results[:count]
-
-    def _parse_rss_reviews(self, raw: str) -> list[dict]:
-        """Parse reviews from Google Play RSS/Atom XML response."""
-        results = []
         try:
-            # Try XML parsing
-            root = ET.fromstring(raw)
-            ns = {
-                'atom': 'http://www.w3.org/2005/Atom',
-                'gd': 'http://schemas.google.com/g/2005',
-            }
-            entries = root.findall('.//atom:entry', ns) or root.findall('.//entry')
-            for entry in entries:
+            import requests
+            from google_play_scraper.constants.request import Formats
+            from google_play_scraper.constants.regex import Regex
+            import json
+
+            session = requests.Session()
+            session.headers.update({
+                'User-Agent': (
+                    'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 '
+                    '(KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36'
+                ),
+                'Accept-Language': 'en-IN,en;q=0.9',
+                'Accept': '*/*',
+                'Origin': 'https://play.google.com',
+                'Referer': f'https://play.google.com/store/apps/details?id={self.app_id}',
+            })
+
+            # Warm up session with a GET first (gets cookies)
+            session.get(
+                f'https://play.google.com/store/apps/details?id={self.app_id}&hl=en&gl=in',
+                timeout=15
+            )
+
+            all_results = []
+            token = None
+            fetched = 0
+
+            while fetched < count:
+                batch = min(100, count - fetched)
+                url = Formats.Reviews.build(lang='en', country='in')
+                body = Formats.Reviews.build_body(
+                    self.app_id, 2, batch, 'null', 'null', token
+                )
+
+                resp = session.post(
+                    url,
+                    data=body,
+                    headers={'content-type': 'application/x-www-form-urlencoded'},
+                    timeout=20
+                )
+
+                if resp.status_code != 200:
+                    logger.warning(f"Requests fallback got HTTP {resp.status_code}")
+                    break
+
+                matches = Regex.REVIEWS.findall(resp.text)
+                if not matches:
+                    logger.warning("Requests fallback: no review data in response")
+                    break
+
+                parsed = json.loads(json.loads(matches[0])[0][2])
+                if not parsed or not parsed[0]:
+                    break
+
+                items = parsed[0]
+                fetched += len(items)
+
+                # Try to get next token
                 try:
-                    # Extract text content
-                    content_el = (
-                        entry.find('atom:content', ns) or
-                        entry.find('content') or
-                        entry.find('atom:summary', ns) or
-                        entry.find('summary')
-                    )
-                    text = content_el.text if content_el is not None else ''
-                    if not text or len(text.strip()) < 5:
+                    token = json.loads(json.loads(matches[0])[0][2])[-2][-1]
+                except Exception:
+                    token = None
+
+                # Convert to standard dict format
+                from google_play_scraper.features.reviews import _fetch_review_items
+                # Parse items using the library's element specs
+                from google_play_scraper.constants.element import ElementSpecs
+                for item in items:
+                    try:
+                        review = {}
+                        for key, spec in ElementSpecs.Review.items():
+                            review[key] = spec.extract_content(item)
+                        all_results.append(review)
+                    except Exception:
                         continue
 
-                    # Extract rating
-                    rating_el = entry.find('.//{http://schemas.google.com/g/2005}rating') or entry.find('.//rating')
-                    rating = 3  # default
-                    if rating_el is not None:
-                        try:
-                            rating = int(float(rating_el.get('value', '3') or rating_el.text or '3'))
-                        except (ValueError, TypeError):
-                            rating = 3
-                    rating = max(1, min(5, rating))
+                if not token or len(items) < batch:
+                    break
 
-                    # Extract date
-                    updated_el = entry.find('atom:updated', ns) or entry.find('updated')
-                    review_date = datetime.now(timezone.utc)
-                    if updated_el is not None and updated_el.text:
-                        try:
-                            review_date = datetime.fromisoformat(updated_el.text.replace('Z', '+00:00'))
-                        except ValueError:
-                            pass
+            logger.info(f"Requests fallback got {len(all_results)} reviews")
+            return all_results
 
-                    # Extract ID
-                    id_el = entry.find('atom:id', ns) or entry.find('id')
-                    review_id = id_el.text if id_el is not None else f"rss_{len(results)}"
-
-                    results.append({
-                        'content': text.strip(),
-                        'score': rating,
-                        'at': review_date,
-                        'reviewId': review_id,
-                    })
-                except Exception:
-                    continue
-        except ET.ParseError:
-            pass
-        return results
+        except Exception as e:
+            logger.warning(f"Requests fallback failed: {e}")
+            return []
     
     def _parse_review(self, raw_review: dict) -> Review:
         """

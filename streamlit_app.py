@@ -299,25 +299,6 @@ st.markdown("""
         text-shadow: none !important;
     }
 
-    /* ── Back / secondary button ── */
-    button[kind="secondary"], .stButton>button[data-testid*="new_analysis"] {
-        background: #1e293b !important;
-        color: #94a3b8 !important;
-        border: 1px solid #334155 !important;
-        box-shadow: none !important;
-        width: auto !important;
-        padding: 0.5rem 1.25rem !important;
-        font-size: 0.85rem !important;
-        font-weight: 500 !important;
-    }
-    button[kind="secondary"]:hover, .stButton>button[data-testid*="new_analysis"]:hover {
-        background: #273548 !important;
-        color: #e2e8f0 !important;
-        border-color: #3b82f6 !important;
-        transform: none !important;
-        box-shadow: none !important;
-    }
-
     /* ── Spacing ── */
     .block-container { padding-top: 1.5rem; padding-bottom: 2rem; }
 </style>
@@ -639,7 +620,7 @@ def main():
         # ── Top action bar ──
         col_back, col_spacer = st.columns([1, 4])
         with col_back:
-            if st.button("← New Analysis", key="new_analysis_top"):
+            if st.button("🔄 New Analysis", key="new_analysis_top", type="primary"):
                 st.session_state.analysis_complete = False
                 st.session_state.report_data = None
                 st.session_state.email_content = None
@@ -651,7 +632,7 @@ def main():
         st.markdown("<div style='margin-top: 1.5rem;'></div>", unsafe_allow_html=True)
         col_b1, col_b2 = st.columns([1, 4])
         with col_b1:
-            if st.button("← New Analysis", key="new_analysis_bottom"):
+            if st.button("🔄 New Analysis", key="new_analysis_bottom", type="primary"):
                 st.session_state.analysis_complete = False
                 st.session_state.report_data = None
                 st.session_state.email_content = None

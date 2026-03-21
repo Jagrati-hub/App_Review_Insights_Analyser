@@ -2,7 +2,7 @@
 import logging
 import time
 import re
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional
 from google_play_scraper import reviews, Sort
 from langdetect import detect, LangDetectException
@@ -81,7 +81,7 @@ class ReviewScraper:
         if not 8 <= weeks_back <= 12:
             raise ValueError(f"weeks_back must be 8-12, got {weeks_back}")
         
-        cutoff_date = datetime.now() - timedelta(weeks=weeks_back)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(weeks=weeks_back)
         logger.info(f"Starting scrape for {self.app_id}, cutoff date: {cutoff_date}")
         
         all_reviews = []
@@ -168,7 +168,7 @@ class ReviewScraper:
             dates = [r.date for r in all_reviews]
             date_range = (min(dates).date(), max(dates).date())
         else:
-            date_range = (cutoff_date.date(), datetime.now().date())
+            date_range = (cutoff_date.date(), datetime.now(timezone.utc).date())
         
         summary = ScrapingSummary(
             total_reviews=total_fetched,
@@ -295,7 +295,7 @@ class ReviewScraper:
             rating=rating,
             text=text.strip(),
             date=review_date,
-            review_id=review_id or f"review_{datetime.now().timestamp()}",
+            review_id=review_id or f"review_{datetime.now(timezone.utc).timestamp()}",
             is_sanitized=False,
             language=None  # Will be set later
         )

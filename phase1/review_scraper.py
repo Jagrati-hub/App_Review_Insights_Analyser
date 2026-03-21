@@ -247,17 +247,21 @@ class ReviewScraper:
                         continuation_token=continuation_token
                     )
                     if result:
+                        logger.info(f"Successfully fetched {len(result)} reviews ({lang}/{country})")
                         return result, token
                     # Empty result — try next combo
+                    logger.warning(f"Empty result for {lang}/{country}, trying next combo")
                     break
                 except Exception as e:
                     last_err = e
                     if attempt == max_retries - 1:
+                        logger.warning(f"All retries failed for {lang}/{country}: {e}")
                         break
                     wait_time = 2 ** attempt
                     logger.warning(f"Fetch attempt {attempt + 1} failed ({lang}/{country}), retrying in {wait_time}s: {e}")
                     time.sleep(wait_time)
 
+        # All combos failed — raise the last error so caller can surface it
         if last_err:
             raise last_err
         return [], None

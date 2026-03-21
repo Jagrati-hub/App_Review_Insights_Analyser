@@ -339,16 +339,30 @@ def run_analysis(weeks_back: int, recipient_email: str):
         scraper = ReviewScraper(scraper_config)
         progress_bar.progress(10)
         
+        # Quick connectivity check
+        try:
+            import urllib.request
+            urllib.request.urlopen('https://play.google.com', timeout=5)
+        except Exception as conn_err:
+            st.error(f"❌ Cannot reach Google Play Store: {conn_err}")
+            st.warning("Streamlit Cloud may be blocking outbound requests to play.google.com. The scheduler (GitHub Actions) will still work.")
+            progress_bar.progress(0)
+            status_text.text("")
+            return None, None
+        
         try:
             reviews, scraping_summary = scraper.scrape_reviews(weeks_back=weeks_back)
         except Exception as scrape_err:
-            st.error(f"❌ Phase 1 failed: {str(scrape_err)}")
+            err_msg = str(scrape_err)
+            st.error(f"❌ Phase 1 failed: {err_msg}")
+            if 'connect' in err_msg.lower() or 'timeout' in err_msg.lower() or 'network' in err_msg.lower() or 'ssl' in err_msg.lower():
+                st.warning("⚠️ Network issue detected. Streamlit Cloud may be blocking Google Play Store requests. Try running locally or check your network.")
             progress_bar.progress(0)
             status_text.text("")
             return None, None
         
         if not reviews:
-            st.error("❌ Phase 1: No reviews scraped. Check internet connection or Play Store availability.")
+            st.error("❌ Phase 1: No reviews scraped. The Play Store returned 0 results — this may be a network/IP block on Streamlit Cloud.")
             progress_bar.progress(0)
             status_text.text("")
             return None, None

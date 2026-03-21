@@ -78,10 +78,12 @@ class ReviewScraper:
             - ScrapingError: If Play Store is unavailable
             - ValidationError: If weeks_back is out of range
         """
-        if not 8 <= weeks_back <= 12:
-            raise ValueError(f"weeks_back must be 8-12, got {weeks_back}")
+        if not 1 <= weeks_back <= 52:
+            raise ValueError(f"weeks_back must be 1-52, got {weeks_back}")
         
         cutoff_date = datetime.now(timezone.utc) - timedelta(weeks=weeks_back)
+        # Also keep a naive version for comparison with google-play-scraper's naive datetimes
+        cutoff_date_naive = cutoff_date.replace(tzinfo=None)
         logger.info(f"Starting scrape for {self.app_id}, cutoff date: {cutoff_date}")
         
         all_reviews = []
@@ -111,11 +113,15 @@ class ReviewScraper:
                     try:
                         # Check if review is within date range
                         review_date = raw_review.get('at')
-                        if review_date and review_date < cutoff_date:
-                            logger.debug(f"Review older than cutoff date, stopping")
-                            # Stop fetching if we've reached reviews older than cutoff
-                            total_fetched = self.max_reviews  # Force exit
-                            break
+                        if review_date:
+                            # google-play-scraper returns timezone-naive datetimes
+                            # Compare using naive cutoff to avoid TypeError
+                            cmp_date = review_date.replace(tzinfo=None) if review_date.tzinfo else review_date
+                            if cmp_date < cutoff_date_naive:
+                                logger.debug(f"Review older than cutoff date, stopping")
+                                # Stop fetching if we've reached reviews older than cutoff
+                                total_fetched = self.max_reviews  # Force exit
+                                break
                         
                         # Parse review
                         review = self._parse_review(raw_review)
@@ -278,14 +284,12 @@ class ReviewScraper:
 
     def _fetch_reviews_rss(self, count: int = 200) -> list[dict]:
         """
-        Fallback: replicate google-play-scraper's HTTP call directly using requests.
-        Uses browser User-Agent and session to bypass IP restrictions on Streamlit Cloud.
+        Fallback: fetch reviews using direct HTTP requests with browser headers.
+        Replicates google-play-scraper's POST request to bypass IP restrictions.
         """
         try:
             import requests
-            from google_play_scraper.constants.request import Formats
-            from google_play_scraper.constants.regex import Regex
-            import json
+            import json as _json
 
             session = requests.Session()
             session.headers.update({
@@ -299,70 +303,81 @@ class ReviewScraper:
                 'Referer': f'https://play.google.com/store/apps/details?id={self.app_id}',
             })
 
-            # Warm up session with a GET first (gets cookies)
-            session.get(
-                f'https://play.google.com/store/apps/details?id={self.app_id}&hl=en&gl=in',
-                timeout=15
-            )
-
-            all_results = []
-            token = None
-            fetched = 0
-
-            while fetched < count:
-                batch = min(100, count - fetched)
-                url = Formats.Reviews.build(lang='en', country='in')
-                body = Formats.Reviews.build_body(
-                    self.app_id, 2, batch, 'null', 'null', token
+            # Warm up session with a GET to get cookies
+            try:
+                session.get(
+                    f'https://play.google.com/store/apps/details?id={self.app_id}&hl=en&gl=in',
+                    timeout=15
                 )
+            except Exception:
+                pass
 
-                resp = session.post(
-                    url,
-                    data=body,
-                    headers={'content-type': 'application/x-www-form-urlencoded'},
-                    timeout=20
-                )
+            # Use google-play-scraper's internal request builder if available
+            try:
+                from google_play_scraper.constants.request import Formats
+                from google_play_scraper.constants.regex import Regex
 
-                if resp.status_code != 200:
-                    logger.warning(f"Requests fallback got HTTP {resp.status_code}")
-                    break
+                all_results = []
+                token = None
+                fetched = 0
 
-                matches = Regex.REVIEWS.findall(resp.text)
-                if not matches:
-                    logger.warning("Requests fallback: no review data in response")
-                    break
+                while fetched < count:
+                    batch = min(100, count - fetched)
+                    url = Formats.Reviews.build(lang='en', country='in')
+                    body = Formats.Reviews.build_body(
+                        self.app_id, 2, batch, 'null', 'null', token
+                    )
 
-                parsed = json.loads(json.loads(matches[0])[0][2])
-                if not parsed or not parsed[0]:
-                    break
+                    resp = session.post(
+                        url,
+                        data=body,
+                        headers={'content-type': 'application/x-www-form-urlencoded'},
+                        timeout=20
+                    )
 
-                items = parsed[0]
-                fetched += len(items)
+                    if resp.status_code != 200:
+                        logger.warning(f"Requests fallback got HTTP {resp.status_code}")
+                        break
 
-                # Try to get next token
-                try:
-                    token = json.loads(json.loads(matches[0])[0][2])[-2][-1]
-                except Exception:
-                    token = None
+                    matches = Regex.REVIEWS.findall(resp.text)
+                    if not matches:
+                        break
 
-                # Convert to standard dict format
-                from google_play_scraper.features.reviews import _fetch_review_items
-                # Parse items using the library's element specs
-                from google_play_scraper.constants.element import ElementSpecs
-                for item in items:
+                    parsed = _json.loads(_json.loads(matches[0])[0][2])
+                    if not parsed or not parsed[0]:
+                        break
+
+                    items = parsed[0]
+                    fetched += len(items)
+
+                    # Try to get next token
                     try:
-                        review = {}
-                        for key, spec in ElementSpecs.Review.items():
-                            review[key] = spec.extract_content(item)
-                        all_results.append(review)
+                        token = _json.loads(_json.loads(matches[0])[0][2])[-2][-1]
                     except Exception:
-                        continue
+                        token = None
 
-                if not token or len(items) < batch:
-                    break
+                    # Parse items using the library's element specs
+                    from google_play_scraper.constants.element import ElementSpecs
+                    for item in items:
+                        try:
+                            review = {}
+                            for key, spec in ElementSpecs.Review.items():
+                                review[key] = spec.extract_content(item)
+                            all_results.append(review)
+                        except Exception:
+                            continue
 
-            logger.info(f"Requests fallback got {len(all_results)} reviews")
-            return all_results
+                    if not token or len(items) < batch:
+                        break
+
+                if all_results:
+                    logger.info(f"Requests fallback got {len(all_results)} reviews")
+                    return all_results
+
+            except Exception as inner_err:
+                logger.warning(f"Internal API fallback failed: {inner_err}")
+
+            return []
 
         except Exception as e:
             logger.warning(f"Requests fallback failed: {e}")

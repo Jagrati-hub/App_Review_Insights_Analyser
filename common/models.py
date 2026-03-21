@@ -167,8 +167,8 @@ class AnalysisRequest:
     
     def __post_init__(self):
         """Validate request parameters."""
-        if not 8 <= self.weeks_back <= 12:
-            raise ValueError(f"weeks_back must be 8-12, got {self.weeks_back}")
+        if not 1 <= self.weeks_back <= 52:
+            raise ValueError(f"weeks_back must be 1-52, got {self.weeks_back}")
         if not self.recipient_email or '@' not in self.recipient_email:
             raise ValueError("Invalid email address")
 

@@ -81,7 +81,6 @@ jobs:
           echo "Starting pulse report generation..."
           python phase6/scheduler.py --test --email "$RECIPIENT_EMAIL" --weeks "$WEEKS_BACK"
           echo "Report generation completed!"
-      
       - name: List generated files
         run: |
           echo "Generated reports:"

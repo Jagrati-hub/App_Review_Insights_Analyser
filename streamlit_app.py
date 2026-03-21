@@ -339,16 +339,12 @@ def run_analysis(weeks_back: int, recipient_email: str):
         scraper = ReviewScraper(scraper_config)
         progress_bar.progress(10)
         
-        # Quick connectivity check
+        # Quick connectivity check (informational only — RSS fallback handles blocked IPs)
         try:
             import urllib.request
             urllib.request.urlopen('https://play.google.com', timeout=5)
-        except Exception as conn_err:
-            st.error(f"❌ Cannot reach Google Play Store: {conn_err}")
-            st.warning("Streamlit Cloud may be blocking outbound requests to play.google.com. The scheduler (GitHub Actions) will still work.")
-            progress_bar.progress(0)
-            status_text.text("")
-            return None, None
+        except Exception:
+            st.warning("⚠️ Direct Play Store access may be limited — using RSS fallback to fetch reviews.")
         
         try:
             reviews, scraping_summary = scraper.scrape_reviews(weeks_back=weeks_back)

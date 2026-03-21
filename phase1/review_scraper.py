@@ -2,6 +2,8 @@
 import logging
 import time
 import re
+import xml.etree.ElementTree as ET
+import urllib.request
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from google_play_scraper import reviews, Sort
@@ -261,10 +263,129 @@ class ReviewScraper:
                     logger.warning(f"Fetch attempt {attempt + 1} failed ({lang}/{country}), retrying in {wait_time}s: {e}")
                     time.sleep(wait_time)
 
-        # All combos failed — raise the last error so caller can surface it
+        # All combos failed — try RSS feed fallback
+        logger.warning("All google-play-scraper combos failed, trying RSS feed fallback...")
+        try:
+            rss_reviews = self._fetch_reviews_rss(count)
+            if rss_reviews:
+                logger.info(f"RSS fallback returned {len(rss_reviews)} reviews")
+                return rss_reviews, None
+        except Exception as rss_err:
+            logger.warning(f"RSS fallback also failed: {rss_err}")
+
+        # Everything failed — raise the last error so caller can surface it
         if last_err:
             raise last_err
         return [], None
+
+    def _fetch_reviews_rss(self, count: int = 200) -> list[dict]:
+        """
+        Fallback: fetch reviews via Google Play RSS feed.
+        Works on Streamlit Cloud where google-play-scraper may be blocked.
+        Returns up to 200 reviews (RSS feed limit per page).
+        """
+        all_results = []
+        # RSS feed supports pages 1-10, 200 reviews each
+        max_pages = min(5, (count // 200) + 1)
+
+        for page in range(1, max_pages + 1):
+            url = (
+                f"https://play.google.com/store/apps/details"
+                f"?id={self.app_id}&hl=en&gl=in"
+            )
+            # Use the public RSS endpoint
+            rss_url = (
+                f"https://play.google.com/store/apps/details"
+                f"?id={self.app_id}&reviewPage={page}&hl=en&gl=in"
+            )
+            # Actual RSS URL format
+            rss_url = f"https://play.google.com/store/getreviews?id={self.app_id}&reviewType=0&pageNum={page}&hl=en"
+
+            try:
+                req = urllib.request.Request(
+                    rss_url,
+                    headers={
+                        'User-Agent': 'Mozilla/5.0 (compatible; ReviewScraper/1.0)',
+                        'Accept': 'application/atom+xml,application/xml,text/xml,*/*',
+                    }
+                )
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    raw = resp.read().decode('utf-8', errors='replace')
+
+                results = self._parse_rss_reviews(raw)
+                if not results:
+                    break
+                all_results.extend(results)
+                logger.info(f"RSS page {page}: got {len(results)} reviews")
+
+                if len(all_results) >= count:
+                    break
+                time.sleep(0.5)
+
+            except Exception as e:
+                logger.warning(f"RSS page {page} failed: {e}")
+                break
+
+        return all_results[:count]
+
+    def _parse_rss_reviews(self, raw: str) -> list[dict]:
+        """Parse reviews from Google Play RSS/Atom XML response."""
+        results = []
+        try:
+            # Try XML parsing
+            root = ET.fromstring(raw)
+            ns = {
+                'atom': 'http://www.w3.org/2005/Atom',
+                'gd': 'http://schemas.google.com/g/2005',
+            }
+            entries = root.findall('.//atom:entry', ns) or root.findall('.//entry')
+            for entry in entries:
+                try:
+                    # Extract text content
+                    content_el = (
+                        entry.find('atom:content', ns) or
+                        entry.find('content') or
+                        entry.find('atom:summary', ns) or
+                        entry.find('summary')
+                    )
+                    text = content_el.text if content_el is not None else ''
+                    if not text or len(text.strip()) < 5:
+                        continue
+
+                    # Extract rating
+                    rating_el = entry.find('.//{http://schemas.google.com/g/2005}rating') or entry.find('.//rating')
+                    rating = 3  # default
+                    if rating_el is not None:
+                        try:
+                            rating = int(float(rating_el.get('value', '3') or rating_el.text or '3'))
+                        except (ValueError, TypeError):
+                            rating = 3
+                    rating = max(1, min(5, rating))
+
+                    # Extract date
+                    updated_el = entry.find('atom:updated', ns) or entry.find('updated')
+                    review_date = datetime.now(timezone.utc)
+                    if updated_el is not None and updated_el.text:
+                        try:
+                            review_date = datetime.fromisoformat(updated_el.text.replace('Z', '+00:00'))
+                        except ValueError:
+                            pass
+
+                    # Extract ID
+                    id_el = entry.find('atom:id', ns) or entry.find('id')
+                    review_id = id_el.text if id_el is not None else f"rss_{len(results)}"
+
+                    results.append({
+                        'content': text.strip(),
+                        'score': rating,
+                        'at': review_date,
+                        'reviewId': review_id,
+                    })
+                except Exception:
+                    continue
+        except ET.ParseError:
+            pass
+        return results
     
     def _parse_review(self, raw_review: dict) -> Review:
         """

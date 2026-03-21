@@ -169,12 +169,18 @@ class ReviewScraper:
             logger.error(f"Scraping failed: {e}")
             raise ScrapingError(f"Failed to scrape reviews: {str(e)}. Please check your internet connection and try again.")
         
-        # Calculate date range
+        # Calculate date range — end date is always today, start is oldest review or cutoff
+        today = datetime.now(timezone.utc).date()
         if all_reviews:
             dates = [r.date for r in all_reviews]
-            date_range = (min(dates).date(), max(dates).date())
+            # Normalize dates (may be naive or aware)
+            def to_date(d):
+                if hasattr(d, 'date'):
+                    return d.date() if hasattr(d, 'tzinfo') else d.date()
+                return d
+            date_range = (min(to_date(d) for d in dates), today)
         else:
-            date_range = (cutoff_date.date(), datetime.now(timezone.utc).date())
+            date_range = (cutoff_date.date(), today)
         
         summary = ScrapingSummary(
             total_reviews=total_fetched,
